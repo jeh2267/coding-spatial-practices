@@ -1,0 +1,50 @@
+body {
+    background-color: #e2ff59;
+    font-family: courier;
+    font-size: 20px; /* font size of em later on would be multiple of this default aka 4em is 4*20=80px */
+}
+
+.wrapper {
+    margin: 0 auto;
+    max-width: 600px;
+    background-color: rgb(17, 255, 0);
+}
+
+h1, h2 {
+    font-weight: normal;
+    text-align: center;
+}
+
+h1 {
+    font-size: 9vw; /* 9% of viewport width */
+    line-height: 1.1;
+    font-family: 'Yatra One', cursive;
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+.entries {
+    background-color: rgb(154, 241, 241);
+}
+
+.entry {
+    padding: 5px;
+}
+
+.heading {
+    font-family: 'Futura', sans-serif;
+    font-size: 25px;
+}
+
+/*
+    Instructions:
+    Look at the index.html file, you should see classes added to the HTML elements.
+    - Add a background color to the wrapper
+    - Add a background color to the entries
+    - Add some padding to each entry
+    - Make heading a different font and a larger font size
+    - Make the default font-size 20px
+*/
