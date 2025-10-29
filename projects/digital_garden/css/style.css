@@ -1,0 +1,111 @@
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --glow: #ffec80;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.4s, color 0.4s;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--text);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  font-family: 'Oswald', sans-serif;
+}
+
+h1 {
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+button, nav {
+  background: var(--bg);
+  border: 1px solid var(--text);
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+p {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.pile {
+  position: relative;
+  width: 700px;
+  height: 550px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1.8s ease-in-out;
+}
+
+.rock-card {
+  position: absolute;
+  transform: translate(var(--x), var(--y)) rotate(var(--r));
+  transition: transform 0.5s ease;
+  z-index: 1;
+}
+
+.rock-card img {
+  width: 120px;
+  border-radius: 8px;
+  pointer-events: none;
+  filter: brightness(1);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+a.rock-card:hover img {
+  filter: drop-shadow(0 0 10px var(--glow)) drop-shadow(0 0 20px var(--glow));
+}
+
+body.night {
+  background-color: #000;
+  color: #fff;
+}
+
+body.night .rock-card img {
+  filter: brightness(0.4);
+}
+
+.rock-card:hover {
+  z-index: 5;
+  transform: translate(var(--x), var(--y)) rotate(0deg) scale(1.05);
+}
+
+.featured-rock {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
