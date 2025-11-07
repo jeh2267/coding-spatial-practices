@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+  margin: var(--space-lg)
+}
+
+:root {
+  --color-primary: #5a2a27;
+  --color-secondary: #3e78b2;
+  --color-accent: #f2f79e;
+  --color-light: #a5978b;
+  --color-dark: #5c4742;
+
+  --space-sm: 5px;
+  --space-md: 15px;
+  --space-lg: 25px;
+}
+
+/* body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  padding: var(--space-sm);
+} */
+
+h1 {
+  font-family: "Notable", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-style: normal;
+}
+
+h2 {
+  font-family: "Notable", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+h3{
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-style: bold;
+}
+
+h4{
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-style: italic;
+}
+
+p {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.button {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: white;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: var(--color-secondary);
+}
+
+.color-swatch {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  margin-right: var(--space-md);
+  display: inline-block;
+}
