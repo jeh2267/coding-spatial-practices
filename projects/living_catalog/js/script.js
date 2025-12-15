@@ -1,95 +1,116 @@
-// Path to CSV in your repo
-const csvUrl = 'media/media.csv';
+let allData = [];
+let currentPage = 1;
+const itemsPerPage = 6; // adjust as needed
 
-// Fetch CSV and convert to objects
-async function fetchCSV() {
-    try {
-        const res = await fetch(csvUrl);
-        const text = await res.text();
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("media/media.csv")
+    .then(resp => resp.text())
+    .then(text => {
+      allData = parseCSV(text);
+      renderPage(currentPage);
+      setupPagination();
+    })
+    .catch(err => console.error("Failed to fetch CSV:", err));
+});
 
-        // Split CSV into lines
-        const lines = text.trim().split('\n');
-        const headers = lines[0].split(',');
+// ---- CSV parsing ----
+function parseCSV(text) {
+  const rows = text.trim().split("\n");
+  const headers = rows.shift().split(",").map(h => h.trim());
 
-        // Convert CSV to array of objects
-        const items = lines.slice(1).map(line => {
-            const values = line.split(',');
-            const obj = {};
-            headers.forEach((header, i) => {
-                obj[header.trim()] = values[i]?.trim();
-            });
-            return obj;
-        });
-
-        renderItems(items);
-    } catch (err) {
-        console.error('Error fetching or parsing CSV:', err);
-    }
+  return rows.map(row => {
+    const cols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)
+                    .map(c => c.replace(/^"|"$/g, "").trim());
+    let obj = {};
+    headers.forEach((h,i) => obj[h] = cols[i] || "");
+    return obj;
+  });
 }
 
-// Render album pages
-function renderItems(items) {
-    const albumContainer = document.querySelector('.album-container');
-    albumContainer.innerHTML = '';
+// ---- Render page ----
+function renderPage(page) {
+  const container = document.getElementById("album-container");
+  container.innerHTML = "";
 
-    items.forEach(item => {
-        const page = document.createElement('div');
-        page.classList.add('page');
+  const start = (page-1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageItems = allData.slice(start, end);
 
-        let mediaEl;
+  pageItems.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "album-item";
 
-        if (item.type === 'image') {
-            mediaEl = document.createElement('img');
-            mediaEl.src = item.src;
-            mediaEl.alt = item.title;
-        } else if (item.type === 'video') {
-            mediaEl = document.createElement('video');
-            mediaEl.controls = true;
-            const source = document.createElement('source');
-            source.src = item.src;
-            source.type = 'video/mp4';
-            mediaEl.appendChild(source);
-        } else if (item.type === 'link') {
-            mediaEl = document.createElement('a');
-            mediaEl.href = item.src;
-            mediaEl.target = '_blank';
-            mediaEl.textContent = item.title;
-        }
+    if(item.type === "image") {
+      const img = document.createElement("img");
+      img.src = `media/${item.src}`;
+      img.alt = item.title;
 
-        page.appendChild(mediaEl);
-        albumContainer.appendChild(page);
-    });
+      if(item.link) {
+        const a = document.createElement("a");
+        a.href = item.link;
+        a.target = "_blank";
+        a.appendChild(img);
+        div.appendChild(a);
+      } else {
+        div.appendChild(img);
+      }
 
-    initAlbum(); // Initialize flipping logic
-}
+    } else if(item.type === "video") {
+      const vid = document.createElement("video");
+      vid.src = `media/${item.src}`;
+      vid.controls = true;
+      div.appendChild(vid);
 
-// Album flipping logic
-function initAlbum() {
-    const pages = document.querySelectorAll('.page');
-    let current = 0;
+    } else if(item.type === "link") {
+      const a = document.createElement("a");
+      a.href = item.link || item.src;
+      a.target = "_blank";
 
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.getElementById('prevBtn');
+      const img = document.createElement("img");
+      img.src = `media/${item.src}`;
+      img.alt = item.title;
 
-    function showPage(index) {
-        pages.forEach((page, i) => {
-            page.classList.toggle('active', i === index);
-        });
+      a.appendChild(img);
+      div.appendChild(a);
     }
 
-    nextBtn.addEventListener('click', () => {
-        if (current < pages.length - 1) current++;
-        showPage(current);
-    });
+    div.addEventListener("click", () => showPopup(item));
+    container.appendChild(div);
+  });
 
-    prevBtn.addEventListener('click', () => {
-        if (current > 0) current--;
-        showPage(current);
-    });
-
-    // Initialize first page
-    showPage(current);
+  document.getElementById("page-info").textContent = `Page ${page}`;
 }
 
-// Kick everything off
-fetchCSV();
+// ---- Popup ----
+function showPopup(item) {
+  const popup = document.getElementById("popup");
+  const content = document.getElementById("popup-content");
+
+  let html = `<h3>${item.title}</h3><p>Type: ${item.type}</p>`;
+  if(item.link) html += `<p><a href="${item.link}" target="_blank">${item.link}</a></p>`;
+
+  content.innerHTML = html;
+  popup.classList.remove("hidden");
+  popup.onclick = () => popup.classList.add("hidden");
+}
+
+// ---- Pagination buttons ----
+function setupPagination() {
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+
+  prevBtn.addEventListener("click", () => {
+    if(currentPage > 1) {
+      currentPage--;
+      renderPage(currentPage);
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    const totalPages = Math.ceil(allData.length / itemsPerPage);
+    if(currentPage < totalPages) {
+      currentPage++;
+      renderPage(currentPage);
+    }
+  });
+}

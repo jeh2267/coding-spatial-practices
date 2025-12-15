@@ -1,91 +1,73 @@
-/* General layout */
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: #ececec;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
-/* Title */
-h2 {
-    margin-bottom: 20px;
+h1 {
+  margin: 20px 0;
 }
 
-/* Album container for holding pages */
-.album-container {
-    width: 80vw; /* Adjust to fit the page nicely */
-    height: 60vh;
-    position: relative;
-    perspective: 1500px;
+#album-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 
-/* Each individual page */
-.page {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    opacity: 0;
-    transform: rotateY(-90deg);
-    transition: transform 0.6s ease, opacity 0.6s ease;
+.album-item img, .album-item video {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.page.active {
-    opacity: 1;
-    transform: rotateY(0deg);
+.album-item a img {
+  border: 2px solid #ccc;
+  transition: transform 0.2s;
 }
 
-/* Styling for media */
-.page img, .page video {
-    max-width: 90%;
-    max-height: 90%;
+.album-item a img:hover {
+  transform: scale(1.05);
+  border-color: #999;
 }
 
-.page a {
-    font-size: 20px;
-    color: #333;
-    text-decoration: none;
+/* Popup */
+#popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-/* Controls (Next/Previous buttons) */
-.controls {
-    margin-top: 20px;
+#popup-content {
+  background: #fff;
+  padding: 20px;
+  max-width: 400px;
+  border-radius: 8px;
+  text-align: left;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: transparent;
-    border: 2px solid #ccc;
-    color: #333;
-    transition: background-color 0.3s ease;
+.hidden {
+  display: none;
 }
 
-/* Hover effect for buttons */
-button:hover {
-    background-color: #f0f0f0;
+/* Pagination */
+.pagination {
+  margin: 20px;
 }
 
-/* To make controls appear only when hovering */
-button {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.album-container:hover button {
-    opacity: 1;
+.pagination button {
+  padding: 8px 16px;
+  font-size: 16px;
+  margin: 0 10px;
+  cursor: pointer;
 }
