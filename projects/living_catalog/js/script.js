@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     id: values[headers.indexOf('id')],
                     title: values[headers.indexOf('title')],
                     src: values[headers.indexOf('src')],
-                    link: values[headers.indexOf('link')],
+                    address: values[headers.indexOf('address')],
                     type: values[headers.indexOf('type')]
                 };
                 createPage(media);
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let mediaEl;
         if (media.type === 'link') {
             const a = document.createElement('a');
-            a.href = media.link;
+            a.href = media.address;
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
             mediaEl = document.createElement('img');
