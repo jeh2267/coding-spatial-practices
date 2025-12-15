@@ -1,56 +1,69 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #f5f5f5;
-    margin: 0;
-}
-
+/* Album container */
 #album {
-    width: 80%;
+    width: 90%;
     max-width: 900px;
-    height: 600px;
+    height: 80vh;
     perspective: 2000px;
+    margin: auto;
     position: relative;
-    overflow: hidden; /* prevent stacked overflow */
+    overflow: hidden;
 }
 
+/* Page style */
 .page {
     width: 100%;
     height: 100%;
-    background: white;
     position: absolute;
     top: 0;
     left: 0;
     background: white;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer; /* was empty */
-    transform-origin: left center; /* specify origin */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transform-origin: left; /* flip from left edge */
     backface-visibility: hidden;
     transform-style: preserve-3d;
-    transition: transform 0.8s ease;
+    transition: transform 0.8s ease, box-shadow 0.3s ease;
+    border-left: 3px solid #ddd;  /* indicate page edge */
+    border-right: 3px solid #ddd; /* indicate page edge */
+    box-sizing: border-box;
+}
+
+/* Flipped page style */
+.page.flipped {
+    transform: rotateY(-180deg);
+    box-shadow: -5px 5px 20px rgba(0,0,0,0.2);
     z-index: 0;
 }
 
+/* Media inside the page */
 .page img, .page video {
-    max-width: 90%;
-    max-height: 80%;
+    max-width: 95%;
+    max-height: 70%;
+    object-fit: contain; /* scales images/videos to fit while preserving ratio */
+    margin-bottom: 10px;
+    border-radius: 5px;
 }
 
-.page.flipped {
-    transform: rotateY(-180deg);
-    z-index: -1; /* send flipped pages behind */
-}
-
-#front-page h1 {
-    font-size: 3em;
+/* Title under media */
+.page h2 {
     margin: 0;
+    text-align: center;
+    font-size: 1.2em;
+    word-break: break-word;
 }
 
-#front-page p {
-    z-index: 1000;
+/* Mobile friendly */
+@media (max-width: 768px) {
+    #album {
+        width: 95%;
+        height: 60vh;
+    }
+
+    .page h2 {
+        font-size: 1em;
+    }
 }
