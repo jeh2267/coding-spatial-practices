@@ -1,28 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Media Album</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Catalog</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>Album</h1>
+    <div id="album">
+        <!-- Front Page -->
+        <div class="page" id="front-page">
+            <h1>Memories</h1>
+            <p>Click to open</p>
+        </div>
+        <!-- Media pages will be generated dynamically by JS -->
+    </div>
 
-  <div id="album-container"></div>
-
-  <!-- Pagination Controls -->
-  <div class="pagination">
-    <button id="prev-btn">&lt; Previous</button>
-    <span id="page-info">Page 1</span>
-    <button id="next-btn">Next &gt;</button>
-  </div>
-
-  <!-- Popup -->
-  <div id="popup" class="hidden">
-    <div id="popup-content"></div>
-  </div>
-
-<script src="js/script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

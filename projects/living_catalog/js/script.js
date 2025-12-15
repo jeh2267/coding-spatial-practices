@@ -1,116 +1,65 @@
-let allData = [];
-let currentPage = 1;
-const itemsPerPage = 6; // adjust as needed
+const album = document.getElementById('album');
+let pages = [];
+let currentPage = 0;
 
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("media/media.csv")
-    .then(resp => resp.text())
-    .then(text => {
-      allData = parseCSV(text);
-      renderPage(currentPage);
-      setupPagination();
-    })
-    .catch(err => console.error("Failed to fetch CSV:", err));
-});
+// Load CSV file
+fetch('media/media.csv')
+    .then(response => response.text())
+    .then(data => {
+        const rows = data.split('\n').slice(1); // skip header
+        rows.forEach(row => {
+            if (!row.trim()) return; // skip empty rows
+            const [id, title, src, link] = row.split(',');
+            createPage({id, title, src, link});
+        });
+    });
 
-// ---- CSV parsing ----
-function parseCSV(text) {
-  const rows = text.trim().split("\n");
-  const headers = rows.shift().split(",").map(h => h.trim());
+// Function to create page element
+function createPage(media) {
+    const page = document.createElement('div');
+    page.classList.add('page');
 
-  return rows.map(row => {
-    const cols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)
-                    .map(c => c.replace(/^"|"$/g, "").trim());
-    let obj = {};
-    headers.forEach((h,i) => obj[h] = cols[i] || "");
-    return obj;
-  });
-}
-
-// ---- Render page ----
-function renderPage(page) {
-  const container = document.getElementById("album-container");
-  container.innerHTML = "";
-
-  const start = (page-1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const pageItems = allData.slice(start, end);
-
-  pageItems.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "album-item";
-
-    if(item.type === "image") {
-      const img = document.createElement("img");
-      img.src = `media/${item.src}`;
-      img.alt = item.title;
-
-      if(item.link) {
-        const a = document.createElement("a");
-        a.href = item.link;
-        a.target = "_blank";
+    if (media.link) {
+        const a = document.createElement('a');
+        a.href = media.link;
+        a.target = '_blank';
+        const img = document.createElement('img');
+        img.src = media.src;
+        img.alt = media.title;
         a.appendChild(img);
-        div.appendChild(a);
-      } else {
-        div.appendChild(img);
-      }
-
-    } else if(item.type === "video") {
-      const vid = document.createElement("video");
-      vid.src = `media/${item.src}`;
-      vid.controls = true;
-      div.appendChild(vid);
-
-    } else if(item.type === "link") {
-      const a = document.createElement("a");
-      a.href = item.link || item.src;
-      a.target = "_blank";
-
-      const img = document.createElement("img");
-      img.src = `media/${item.src}`;
-      img.alt = item.title;
-
-      a.appendChild(img);
-      div.appendChild(a);
+        page.appendChild(a);
+    } else if (media.src.endsWith('.mp4')) {
+        const video = document.createElement('video');
+        video.src = media.src;
+        video.controls = true;
+        page.appendChild(video);
+    } else {
+        const img = document.createElement('img');
+        img.src = media.src;
+        img.alt = media.title;
+        page.appendChild(img);
     }
 
-    div.addEventListener("click", () => showPopup(item));
-    container.appendChild(div);
-  });
-
-  document.getElementById("page-info").textContent = `Page ${page}`;
+    album.appendChild(page);
+    pages.push(page);
 }
 
-// ---- Popup ----
-function showPopup(item) {
-  const popup = document.getElementById("popup");
-  const content = document.getElementById("popup-content");
+// Event listener for flipping pages
+album.addEventListener('click', (e) => {
+    const rect = album.getBoundingClientRect();
+    const x = e.clientX - rect.left;
 
-  let html = `<h3>${item.title}</h3><p>Type: ${item.type}</p>`;
-  if(item.link) html += `<p><a href="${item.link}" target="_blank">${item.link}</a></p>`;
-
-  content.innerHTML = html;
-  popup.classList.remove("hidden");
-  popup.onclick = () => popup.classList.add("hidden");
-}
-
-// ---- Pagination buttons ----
-function setupPagination() {
-  const prevBtn = document.getElementById("prev-btn");
-  const nextBtn = document.getElementById("next-btn");
-
-  prevBtn.addEventListener("click", () => {
-    if(currentPage > 1) {
-      currentPage--;
-      renderPage(currentPage);
+    if (currentPage === 0) {
+        // Flip front page
+        pages[0]?.classList.add('flipped');
+        currentPage++;
+    } else if (x > rect.width / 2 && currentPage < pages.length) {
+        // Right side: next page
+        pages[currentPage]?.classList.add('flipped');
+        currentPage++;
+    } else if (x < rect.width / 2 && currentPage > 1) {
+        // Left side: previous page
+        currentPage--;
+        pages[currentPage]?.classList.remove('flipped');
     }
-  });
-
-  nextBtn.addEventListener("click", () => {
-    const totalPages = Math.ceil(allData.length / itemsPerPage);
-    if(currentPage < totalPages) {
-      currentPage++;
-      renderPage(currentPage);
-    }
-  });
-}
+});
