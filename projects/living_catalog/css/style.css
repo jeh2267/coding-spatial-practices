@@ -14,6 +14,7 @@ body {
     height: 600px;
     perspective: 2000px;
     position: relative;
+    overflow: hidden; /* prevent stacked overflow */
 }
 
 .page {
@@ -23,15 +24,14 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     cursor: pointer;
-    transition: transform 0.6s ease;
+    transition: transform 0.6s ease, z-index 0s linear 0.6s;
+    z-index: 0;
 }
 
 .page img, .page video {
@@ -41,6 +41,7 @@ body {
 
 .page.flipped {
     transform: rotateY(-180deg);
+    z-index: -1; /* send flipped pages behind */
 }
 
 #front-page h1 {

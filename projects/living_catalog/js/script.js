@@ -1,21 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const album = document.getElementById('album');
     let pages = [];
-    let currentPage = 0;
+    let currentPage = 0; // 0 = title page
 
     // Load CSV
     fetch('media/media.csv')
-        .then(res => {
-            if (!res.ok) throw new Error('Failed to fetch CSV');
-            return res.text();
-        })
+        .then(res => res.text())
         .then(data => {
             const lines = data.trim().split('\n');
             const headers = lines[0].split(',').map(h => h.trim());
 
             lines.slice(1).forEach(line => {
                 if (!line.trim()) return;
-                // Split CSV, remove surrounding quotes and spaces
                 const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g).map(v => v.replace(/^"|"$/g, '').trim());
 
                 const media = {
@@ -33,6 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
+
+        // Add optional title for each media
+        const title = document.createElement('h2');
+        title.textContent = media.title;
+        page.appendChild(title);
 
         if (media.type === 'link') {
             const a = document.createElement('a');
@@ -57,24 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
             page.appendChild(img);
         }
 
+        page.style.zIndex = 100 - pages.length; // stack pages on top of each other
         album.appendChild(page);
         pages.push(page);
     }
 
-    // Flip pages
+    // Click to flip pages
     album.addEventListener('click', e => {
-        const rect = album.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-
-        if (currentPage === 0) {
-            pages[0]?.classList.add('flipped');
-            currentPage++;
-        } else if (x > rect.width / 2 && currentPage < pages.length) {
+        if (currentPage < pages.length) {
             pages[currentPage]?.classList.add('flipped');
             currentPage++;
-        } else if (x < rect.width / 2 && currentPage > 1) {
-            currentPage--;
-            pages[currentPage]?.classList.remove('flipped');
         }
     });
 });
