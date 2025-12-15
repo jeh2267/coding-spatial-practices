@@ -1,0 +1,132 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f6f2e8;
+}
+
+.header {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+/* BOOK */
+.book {
+  width: 360px;
+  height: 480px;
+  margin: 40px auto;
+  position: relative;
+  perspective: 2000px;
+  transition: transform .6s ease;
+}
+
+.book.closed { transform: translateX(0); }
+.book.open { transform: translateX(180px); }
+
+/* COVER */
+.cover {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* PAGES */
+.pages {
+  position: absolute;
+  inset: 0;
+}
+
+.page {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  right: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform .8s ease;
+}
+
+.page.flipped {
+  transform: rotateY(-180deg);
+  pointer-events: none;
+}
+
+.front, .back {
+  position: absolute;
+  inset: 0;
+  background: white;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* STACKING */
+.page:nth-child(1) { z-index: 5; }
+.page:nth-child(2) { z-index: 4; }
+.page:nth-child(3) { z-index: 3; }
+.page:nth-child(4) { z-index: 2; }
+
+/* INVISIBLE NAV */
+.page-zone {
+  position: absolute;
+  top: 0;
+  width: 8%;
+  height: 100%;
+  z-index: 20;
+}
+
+.page-zone.left { left: 0; }
+.page-zone.right { right: 0; }
+
+.page-zone:hover {
+  background: rgba(0,0,0,.05);
+  cursor: pointer;
+}
+
+/* GRID */
+.grid {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  gap: 20px;
+}
+
+.grid img {
+  width: 100%;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+}
