@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (frontPage) frontPage.style.zIndex = 2000;
 
     // Load CSV https://github.com/jeh2267/coding-spatial-practices/blob/main/projects/living_catalog/media/media.csv
-    fetch('media/media.csv')
+    fetch('media.csv')
         .then(res => res.text())
         .then(data => {
             const lines = data.trim().split('\n');
