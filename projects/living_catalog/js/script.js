@@ -1,148 +1,130 @@
-const SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1f9HZPne6BTy_mwbm_KngGu_gegHF64px/gviz/tq?tqx=out:json';
+const SPREADSHEET_ID = '1f9HZPne6BTy_mwbm_KngGu_gegHF64px'; // e.g., 1f9HZPne6BTy_mwbm_KngGu_gegHF64px
+const SHEET_GID = '1'; // Change if using a specific sheet tab
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
 
-const book = document.getElementById('book');
-const cover = document.getElementById('cover');
-const pagesContainer = document.querySelector('.pages');
-
-const albumView = document.getElementById('albumView');
-const gridView = document.getElementById('gridView');
-const aboutModal = document.getElementById('aboutModal');
-
-const albumBtn = document.getElementById('albumBtn');
-const gridBtn = document.getElementById('gridBtn');
-const aboutBtn = document.getElementById('aboutBtn');
-const closeAbout = document.getElementById('closeAbout');
-
-const nextZone = document.getElementById('nextZone');
-const prevZone = document.getElementById('prevZone');
-
+// Album state
 let pages = [];
-let current = -1;
+let current = 0;
 
-/* -------- FETCH SHEET -------- */
+// DOM elements
+const albumContainer = document.querySelector('.album-container');
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
 
-async function fetchSheet() {
+// --- Fetch GViz JSON ---
+async function fetchSheetGViz() {
   const res = await fetch(SHEET_URL);
   const text = await res.text();
 
-  const json = JSON.parse(
-    text.replace(/.*setResponse\(/, '').replace(/\);$/, '')
-  );
+  // Clean the GViz JSON wrapper
+  const jsonText = text.replace(/^.*setResponse\(/, '').replace(/\);$/, '');
+  const json = JSON.parse(jsonText);
+
+  if (!json.table || !json.table.rows) {
+    console.error('No rows found in sheet');
+    return [];
+  }
 
   const headers = json.table.cols.map(c => c.label);
 
-  return json.table.rows.map(row => {
+  const items = json.table.rows.map(row => {
     const obj = {};
     row.c.forEach((cell, i) => {
       obj[headers[i]] = cell ? cell.v : '';
     });
     return obj;
   });
+
+  console.log('Parsed items:', items);
+  return items;
 }
 
-/* -------- RENDER ALBUM -------- */
-
+// --- Render Album ---
 function renderAlbum(items) {
-  pagesContainer.innerHTML = '';
+  albumContainer.innerHTML = ''; // Clear previous content
+  pages = []; // Reset pages array
 
-  items.forEach(item => {
+  items.forEach((item, index) => {
     const page = document.createElement('div');
-    page.className = 'page';
+    page.classList.add('page');
+    if (index === 0) page.classList.add('active');
 
-    const front = document.createElement('div');
-    front.className = 'front';
+    let media;
+    switch (item.type.toLowerCase()) {
+      case 'image':
+        media = document.createElement('img');
+        media.src = item.src;
+        media.alt = item.title || `Image ${index + 1}`;
+        break;
+      case 'video':
+        media = document.createElement('video');
+        media.controls = true;
+        const sourceVideo = document.createElement('source');
+        sourceVideo.src = item.src;
+        sourceVideo.type = 'video/mp4';
+        media.appendChild(sourceVideo);
+        break;
+      case 'audio':
+        media = document.createElement('audio');
+        media.controls = true;
+        const sourceAudio = document.createElement('source');
+        sourceAudio.src = item.src;
+        sourceAudio.type = 'audio/mpeg';
+        media.appendChild(sourceAudio);
+        break;
+      default:
+        console.warn('Unknown media type:', item.type);
+    }
 
-    if (item.type === 'image')
-      front.innerHTML = `<img src="${item.src}">`;
-
-    if (item.type === 'video')
-      front.innerHTML = `<video controls src="${item.src}"></video>`;
-
-    if (item.type === 'audio')
-      front.innerHTML = `<audio controls src="${item.src}"></audio>`;
-
-    const back = document.createElement('div');
-    back.className = 'back';
-
-    page.append(front, back);
-    pagesContainer.appendChild(page);
-  });
-
-  pages = document.querySelectorAll('.page');
-}
-
-/* -------- BOOK LOGIC -------- */
-
-function openBook() {
-  book.classList.remove('closed');
-  book.classList.add('open');
-  current = 0;
-}
-
-function closeBook() {
-  pages.forEach(p => p.classList.remove('flipped'));
-  book.classList.remove('open');
-  book.classList.add('closed');
-  current = -1;
-}
-
-function stopMedia() {
-  document.querySelectorAll('video, audio').forEach(m => {
-    m.pause();
-    m.currentTime = 0;
+    if (media) page.appendChild(media);
+    albumContainer.appendChild(page);
+    pages.push(page);
   });
 }
 
-function nextPage() {
-  if (current === -1) return;
-  stopMedia();
+// --- Show Page ---
+function showPage(index) {
+  pages.forEach((page, i) => {
+    if (i === index) {
+      page.classList.add('active');
+    } else {
+      page.classList.remove('active');
 
-  if (current < pages.length) {
-    pages[current]?.classList.add('flipped');
+      // Pause any playing media on hidden pages
+      const media = page.querySelector('video, audio');
+      if (media) media.pause();
+    }
+  });
+}
+
+// --- Button Handlers ---
+nextBtn.addEventListener('click', () => {
+  if (current < pages.length - 1) {
     current++;
+  } else {
+    current = 0; // Return to first page after the last
   }
-
-  if (current === pages.length) closeBook();
-}
-
-function prevPage() {
-  if (current <= 0) return;
-  stopMedia();
-  current--;
-  pages[current].classList.remove('flipped');
-}
-
-/* -------- VIEW TOGGLES -------- */
-
-function showView(view) {
-  albumView.classList.remove('active');
-  gridView.classList.remove('active');
-  view.classList.add('active');
-}
-
-albumBtn.onclick = () => showView(albumView);
-gridBtn.onclick = () => showView(gridView);
-aboutBtn.onclick = () => aboutModal.classList.add('active');
-closeAbout.onclick = () => aboutModal.classList.remove('active');
-
-/* -------- EVENTS -------- */
-
-cover.onclick = openBook;
-nextZone.onclick = nextPage;
-prevZone.onclick = prevPage;
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') nextPage();
-  if (e.key === 'ArrowLeft') prevPage();
+  showPage(current);
 });
 
-/* -------- INIT -------- */
+prevBtn.addEventListener('click', () => {
+  if (current > 0) {
+    current--;
+  } else {
+    current = pages.length - 1; // Wrap around to last page
+  }
+  showPage(current);
+});
 
-async function init() {
-  const items = await fetchSheet();
+// --- Keyboard navigation ---
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextBtn.click();
+  if (e.key === 'ArrowLeft') prevBtn.click();
+});
+
+// --- Initialize ---
+(async function init() {
+  const items = await fetchSheetGViz();
   renderAlbum(items);
-  closeBook();
-}
-
-init();
+  showPage(current);
+})();
