@@ -29,6 +29,8 @@
     border-left: 3px solid #ddd;
     border-right: 3px solid #ddd;
     box-sizing: border-box;
+    overflow: hidden;
+    z-index: 0;
 }
 
 /* Flipped page */
@@ -43,13 +45,16 @@
     object-fit: contain;
     margin-bottom: 10px;
     border-radius: 5px;
+    display: block;
 }
 
 /* Title below media */
 .page h2 {
-    margin: 0;
+    margin: 5px 0 10px 0;
     text-align: center;
     font-size: 1.2em;
+    width: 90%;
+    flex-shrink: 0;
 }
 
 /* Edge buttons */
@@ -90,4 +95,13 @@
     #prev, #next {
         width: 15%;
     }
+}
+
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
