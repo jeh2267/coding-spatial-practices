@@ -40,11 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const a = document.createElement('a');
             a.href = media.link;
             a.target = '_blank';
-            mediaEl = document.createElement('img');
-            mediaEl.src = 'media/' + media.src;
-            mediaEl.alt = media.title;
-            a.appendChild(mediaEl);
+            a.rel = 'noopener noreferrer';
+            const img = document.createElement('img');
+            img.src = 'media/' + media.src;
+            img.alt = media.title;
+            a.appendChild(img);
             page.appendChild(a);
+        }
+            // mediaEl = document.createElement('img');
+            // mediaEl.src = 'media/' + media.src;
+            // mediaEl.alt = media.title;
+            // a.appendChild(mediaEl);
+            // page.appendChild(a);
         } else if (media.type === 'video') {
             mediaEl = document.createElement('video');
             mediaEl.src = 'media/' + media.src;
@@ -67,22 +74,27 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
+
     // Click to flip forward/backward
     album.addEventListener('click', e => {
+
+        if (e.target.closest('a')) return;
+
         const rect = album.getBoundingClientRect();
         const x = e.clientX - rect.left;
 
-        // Left side click = go back
         if (x < rect.width / 2 && currentPage > 0) {
+            // Go back
             currentPage--;
-            const page = currentPage === 0 ? frontPage : pages[currentPage - 1];
-            if (page) page.classList.remove('flipped');
+            const pageToUnflip = currentPage === 0 ? frontPage : pages[currentPage - 1];
+            if (pageToUnflip) pageToUnflip.classList.remove('flipped');
 
-        // Right side click = go forward
         } else if (x >= rect.width / 2 && currentPage < pages.length) {
-            const page = currentPage === 0 ? frontPage : pages[currentPage - 1];
-            if (page) page.classList.add('flipped');
+            // Go forward
+            const pageToFlip = currentPage === 0 ? frontPage : pages[currentPage - 1];
+            if (pageToFlip) pageToFlip.classList.add('flipped');
             currentPage++;
         }
     });
 });
+
