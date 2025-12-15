@@ -6,7 +6,7 @@
     perspective: 2000px;
     margin: auto;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
 }
 
 /* Page style */
@@ -17,7 +17,7 @@
     top: 0;
     left: 0;
     background: white;
-    display: fit-content;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
