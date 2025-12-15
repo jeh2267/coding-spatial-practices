@@ -6,7 +6,7 @@
     perspective: 2000px;
     margin: auto;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Page style */
@@ -19,7 +19,7 @@
     background: white;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     transform-origin: left;
