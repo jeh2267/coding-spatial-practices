@@ -1,53 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Album</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header class="header">
-  <button id="albumBtn">Album</button>
-  <button id="gridBtn">Grid</button>
-  <button id="aboutBtn">About</button>
-</header>
+    <header>
+        <h2>Memories</h2>
+        <!-- Controls Section -->
+        <div class="controls">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </header>
 
-<main>
-
-<!-- ALBUM VIEW -->
-<section id="albumView" class="view active">
-  <div id="book" class="book closed">
-
-    <div id="cover" class="cover">
-      <h1>Memories</h1>
-      <p>Click to open</p>
+    <div class="album-container">
+        <!-- Pages will be dynamically loaded here -->
     </div>
 
-    <div class="pages"></div>
-
-    <div id="prevZone" class="page-zone left"></div>
-    <div id="nextZone" class="page-zone right"></div>
-
-  </div>
-</section>
-
-<!-- GRID VIEW -->
-<section id="gridView" class="view">
-  <div class="grid"></div>
-</section>
-
-</main>
-
-<!-- ABOUT MODAL -->
-<div id="aboutModal" class="modal">
-  <div class="modal-content">
-    <button id="closeAbout">Close</button>
-    <p>Add about text here.</p>
-  </div>
-</div>
-
-<script src="js/script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

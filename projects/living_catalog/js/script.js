@@ -1,130 +1,95 @@
-const SPREADSHEET_ID = '1f9HZPne6BTy_mwbm_KngGu_gegHF64px'; // e.g., 1f9HZPne6BTy_mwbm_KngGu_gegHF64px
-const SHEET_GID = '1'; // Change if using a specific sheet tab
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+// Path to CSV in your repo
+const csvUrl = 'media/media.csv';
 
-// Album state
-let pages = [];
-let current = 0;
+// Fetch CSV and convert to objects
+async function fetchCSV() {
+    try {
+        const res = await fetch(csvUrl);
+        const text = await res.text();
 
-// DOM elements
-const albumContainer = document.querySelector('.album-container');
-const nextBtn = document.getElementById('nextBtn');
-const prevBtn = document.getElementById('prevBtn');
+        // Split CSV into lines
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(',');
 
-// --- Fetch GViz JSON ---
-async function fetchSheetGViz() {
-  const res = await fetch(SHEET_URL);
-  const text = await res.text();
+        // Convert CSV to array of objects
+        const items = lines.slice(1).map(line => {
+            const values = line.split(',');
+            const obj = {};
+            headers.forEach((header, i) => {
+                obj[header.trim()] = values[i]?.trim();
+            });
+            return obj;
+        });
 
-  // Clean the GViz JSON wrapper
-  const jsonText = text.replace(/^.*setResponse\(/, '').replace(/\);$/, '');
-  const json = JSON.parse(jsonText);
+        renderItems(items);
+    } catch (err) {
+        console.error('Error fetching or parsing CSV:', err);
+    }
+}
 
-  if (!json.table || !json.table.rows) {
-    console.error('No rows found in sheet');
-    return [];
-  }
+// Render album pages
+function renderItems(items) {
+    const albumContainer = document.querySelector('.album-container');
+    albumContainer.innerHTML = '';
 
-  const headers = json.table.cols.map(c => c.label);
+    items.forEach(item => {
+        const page = document.createElement('div');
+        page.classList.add('page');
 
-  const items = json.table.rows.map(row => {
-    const obj = {};
-    row.c.forEach((cell, i) => {
-      obj[headers[i]] = cell ? cell.v : '';
+        let mediaEl;
+
+        if (item.type === 'image') {
+            mediaEl = document.createElement('img');
+            mediaEl.src = item.src;
+            mediaEl.alt = item.title;
+        } else if (item.type === 'video') {
+            mediaEl = document.createElement('video');
+            mediaEl.controls = true;
+            const source = document.createElement('source');
+            source.src = item.src;
+            source.type = 'video/mp4';
+            mediaEl.appendChild(source);
+        } else if (item.type === 'link') {
+            mediaEl = document.createElement('a');
+            mediaEl.href = item.src;
+            mediaEl.target = '_blank';
+            mediaEl.textContent = item.title;
+        }
+
+        page.appendChild(mediaEl);
+        albumContainer.appendChild(page);
     });
-    return obj;
-  });
 
-  console.log('Parsed items:', items);
-  return items;
+    initAlbum(); // Initialize flipping logic
 }
 
-// --- Render Album ---
-function renderAlbum(items) {
-  albumContainer.innerHTML = ''; // Clear previous content
-  pages = []; // Reset pages array
+// Album flipping logic
+function initAlbum() {
+    const pages = document.querySelectorAll('.page');
+    let current = 0;
 
-  items.forEach((item, index) => {
-    const page = document.createElement('div');
-    page.classList.add('page');
-    if (index === 0) page.classList.add('active');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
 
-    let media;
-    switch (item.type.toLowerCase()) {
-      case 'image':
-        media = document.createElement('img');
-        media.src = item.src;
-        media.alt = item.title || `Image ${index + 1}`;
-        break;
-      case 'video':
-        media = document.createElement('video');
-        media.controls = true;
-        const sourceVideo = document.createElement('source');
-        sourceVideo.src = item.src;
-        sourceVideo.type = 'video/mp4';
-        media.appendChild(sourceVideo);
-        break;
-      case 'audio':
-        media = document.createElement('audio');
-        media.controls = true;
-        const sourceAudio = document.createElement('source');
-        sourceAudio.src = item.src;
-        sourceAudio.type = 'audio/mpeg';
-        media.appendChild(sourceAudio);
-        break;
-      default:
-        console.warn('Unknown media type:', item.type);
+    function showPage(index) {
+        pages.forEach((page, i) => {
+            page.classList.toggle('active', i === index);
+        });
     }
 
-    if (media) page.appendChild(media);
-    albumContainer.appendChild(page);
-    pages.push(page);
-  });
+    nextBtn.addEventListener('click', () => {
+        if (current < pages.length - 1) current++;
+        showPage(current);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (current > 0) current--;
+        showPage(current);
+    });
+
+    // Initialize first page
+    showPage(current);
 }
 
-// --- Show Page ---
-function showPage(index) {
-  pages.forEach((page, i) => {
-    if (i === index) {
-      page.classList.add('active');
-    } else {
-      page.classList.remove('active');
-
-      // Pause any playing media on hidden pages
-      const media = page.querySelector('video, audio');
-      if (media) media.pause();
-    }
-  });
-}
-
-// --- Button Handlers ---
-nextBtn.addEventListener('click', () => {
-  if (current < pages.length - 1) {
-    current++;
-  } else {
-    current = 0; // Return to first page after the last
-  }
-  showPage(current);
-});
-
-prevBtn.addEventListener('click', () => {
-  if (current > 0) {
-    current--;
-  } else {
-    current = pages.length - 1; // Wrap around to last page
-  }
-  showPage(current);
-});
-
-// --- Keyboard navigation ---
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') nextBtn.click();
-  if (e.key === 'ArrowLeft') prevBtn.click();
-});
-
-// --- Initialize ---
-(async function init() {
-  const items = await fetchSheetGViz();
-  renderAlbum(items);
-  showPage(current);
-})();
+// Kick everything off
+fetchCSV();
