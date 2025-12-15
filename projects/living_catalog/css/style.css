@@ -19,7 +19,7 @@
     background: white;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* allow top-to-bottom flow so title is visible */
     align-items: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     transform-origin: left;
@@ -29,7 +29,8 @@
     border-left: 3px solid #ddd;
     border-right: 3px solid #ddd;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: visible; /* allow title to render instead of getting clipped */
+    padding: 16px; /* give space around content */
     z-index: 0;
 }
 
@@ -41,7 +42,7 @@
 /* Media inside pages */
 .page img, .page video {
     max-width: 95%;
-    max-height: 70%;
+    max-height: 60%; /* reduce slightly so titles have room */
     object-fit: contain;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -50,11 +51,15 @@
 
 /* Title below media */
 .page h2 {
-    margin: 5px 0 10px 0;
+    margin: 8px 0 10px 0;
     text-align: center;
     font-size: 1.2em;
-    width: 90%;
+    width: 100%;
     flex-shrink: 0;
+    white-space: normal;             /* allow wrapping */
+    word-break: break-word;          /* break long words/URLs */
+    overflow-wrap: anywhere;
+    line-height: 1.2;
 }
 
 /* Edge buttons */
