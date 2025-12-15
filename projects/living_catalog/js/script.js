@@ -32,53 +32,44 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
+
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
 
-        const content = document.createElement('div');
-        content.classList.add('page-content');
-
+        // Media element
         let mediaEl;
-
         if (media.type === 'link') {
             const a = document.createElement('a');
-            a.href = media.address; // <-- your renamed column
+            a.href = media.address;
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
-
             mediaEl = document.createElement('img');
             mediaEl.src = 'media/' + media.src;
             mediaEl.alt = media.title;
-
             a.appendChild(mediaEl);
-            content.appendChild(a);
-        }
-
-        if (media.type === 'image') {
-            mediaEl = document.createElement('img');
-            mediaEl.src = 'media/' + media.src;
-            mediaEl.alt = media.title;
-            content.appendChild(mediaEl);
-        }
-
-        if (media.type === 'video') {
+            page.appendChild(a);
+        } else if (media.type === 'video') {
             mediaEl = document.createElement('video');
             mediaEl.src = 'media/' + media.src;
             mediaEl.controls = true;
-            content.appendChild(mediaEl);
+            page.appendChild(mediaEl);
+        } else if (media.type === 'image') {
+            mediaEl = document.createElement('img');
+            mediaEl.src = 'media/' + media.src;
+            mediaEl.alt = media.title;
+            page.appendChild(mediaEl);
         }
 
-        const title = document.createElement('h2');
-        title.textContent = media.title;
+        // Title below media
+        const titleEl = document.createElement('h2');
+        titleEl.textContent = media.title;
+        page.appendChild(titleEl);
 
-        content.appendChild(title);
-        page.appendChild(content);
-
+        page.style.zIndex = 1000 - pages.length;
         album.appendChild(page);
         pages.push(page);
     }
-
 
 
     // Click handlers for edge buttons
@@ -99,22 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pageToUnflip) pageToUnflip.classList.remove('flipped');
         }
     });
-
-    function updatePages() {
-    pages.forEach((page, index) => {
-        page.classList.remove('active');
-
-        if (index === currentPage - 1) {
-            page.classList.add('active');
-        }
-    });
-
-    if (currentPage === 0 && frontPage) {
-        frontPage.classList.add('active');
-    } else if (frontPage) {
-        frontPage.classList.remove('active');
-    }
-    }
-
 });
 
