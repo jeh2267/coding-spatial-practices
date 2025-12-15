@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 0;
 
     // Load CSV
-    fetch('media/media.csv')
+    fetch('media.csv')
         .then(response => {
             if (!response.ok) throw new Error('Failed to fetch CSV');
             return response.text();
