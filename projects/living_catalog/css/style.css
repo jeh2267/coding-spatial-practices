@@ -22,41 +22,61 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    cursor: pointer;
-    transform-origin: left; /* flip from left edge */
+    transform-origin: left;
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: transform 0.8s ease, box-shadow 0.3s ease;
-    border-left: 3px solid #ddd;  /* indicate page edge */
-    border-right: 3px solid #ddd; /* indicate page edge */
+    border-left: 3px solid #ddd;
+    border-right: 3px solid #ddd;
     box-sizing: border-box;
 }
 
-/* Flipped page style */
+/* Flipped page */
 .page.flipped {
     transform: rotateY(-180deg);
-    box-shadow: -5px 5px 20px rgba(0,0,0,0.2);
-    z-index: 0;
 }
 
-/* Media inside the page */
+/* Media inside pages */
 .page img, .page video {
     max-width: 95%;
     max-height: 70%;
-    object-fit: contain; /* scales images/videos to fit while preserving ratio */
+    object-fit: contain;
     margin-bottom: 10px;
     border-radius: 5px;
 }
 
-/* Title under media */
+/* Title below media */
 .page h2 {
     margin: 0;
     text-align: center;
     font-size: 1.2em;
-    word-break: break-word;
 }
 
-/* Mobile friendly */
+/* Edge buttons */
+#prev, #next {
+    position: absolute;
+    top: 0;
+    width: 10%; /* 10% of album width */
+    height: 100%;
+    z-index: 3000;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#prev {
+    left: 0;
+}
+
+#next {
+    right: 0;
+}
+
+/* Hover effect */
+#prev:hover, #next:hover {
+    background: rgba(0,0,0,0.05); /* light grey */
+}
+
+/* Mobile-friendly */
 @media (max-width: 768px) {
     #album {
         width: 95%;
@@ -65,5 +85,9 @@
 
     .page h2 {
         font-size: 1em;
+    }
+
+    #prev, #next {
+        width: 15%;
     }
 }

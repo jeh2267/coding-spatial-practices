@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const album = document.getElementById('album');
     const frontPage = document.getElementById('front-page');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+
     let pages = [];
     let currentPage = 0; // 0 = front page
 
@@ -41,17 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
             a.href = media.link;
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
-            const img = document.createElement('img');
-            img.src = 'media/' + media.src;
-            img.alt = media.title;
-            a.appendChild(img);
+            mediaEl = document.createElement('img');
+            mediaEl.src = 'media/' + media.src;
+            mediaEl.alt = media.title;
+            a.appendChild(mediaEl);
             page.appendChild(a);
-        }
-            // mediaEl = document.createElement('img');
-            // mediaEl.src = 'media/' + media.src;
-            // mediaEl.alt = media.title;
-            // a.appendChild(mediaEl);
-            // page.appendChild(a);
         } else if (media.type === 'video') {
             mediaEl = document.createElement('video');
             mediaEl.src = 'media/' + media.src;
@@ -75,25 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Click to flip forward/backward
-    album.addEventListener('click', e => {
-
-        if (e.target.closest('a')) return;
-
-        const rect = album.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-
-        if (x < rect.width / 2 && currentPage > 0) {
-            // Go back
-            currentPage--;
-            const pageToUnflip = currentPage === 0 ? frontPage : pages[currentPage - 1];
-            if (pageToUnflip) pageToUnflip.classList.remove('flipped');
-
-        } else if (x >= rect.width / 2 && currentPage < pages.length) {
-            // Go forward
+    // Click handlers for edge buttons
+    nextBtn.addEventListener('click', e => {
+        e.stopPropagation(); // prevent any other click
+        if (currentPage < pages.length) {
             const pageToFlip = currentPage === 0 ? frontPage : pages[currentPage - 1];
             if (pageToFlip) pageToFlip.classList.add('flipped');
             currentPage++;
+        }
+    });
+
+    prevBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (currentPage > 0) {
+            currentPage--;
+            const pageToUnflip = currentPage === 0 ? frontPage : pages[currentPage - 1];
+            if (pageToUnflip) pageToUnflip.classList.remove('flipped');
         }
     });
 });
