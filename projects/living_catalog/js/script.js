@@ -1,10 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const album = document.getElementById('album');
+    const frontPage = document.getElementById('front-page'); // keep reference
     let pages = [];
     let currentPage = 0; // 0 = front page
 
-    // Load CSV
-    fetch('projects/living_catalog/media/media.csv')
+    // ensure front page sits on top until clicked
+    if (frontPage) frontPage.style.zIndex = 2000;
+
+    // Load CSV https://github.com/jeh2267/coding-spatial-practices/blob/main/projects/living_catalog/media/media.csv
+    fetch('media/media.csv')
         .then(res => res.text())
         .then(data => {
             const lines = data.trim().split('\n');
@@ -57,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             page.appendChild(img);
         }
 
+        // place pages behind the front page
         page.style.zIndex = 1000 - pages.length; // stack pages on top of each other
         album.appendChild(page);
         pages.push(page);
@@ -65,8 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Flip page logic
     album.addEventListener('click', e => {
         if (currentPage < pages.length) {
-            const page = currentPage === 0 ? document.getElementById('front-page') : pages[currentPage - 1];
-            page.classList.add('flipped');
+            // flip the front page first, then each created page
+            const page = currentPage === 0 ? frontPage : pages[currentPage - 1];
+            if (page) page.classList.add('flipped');
             currentPage++;
         }
     });

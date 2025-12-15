@@ -28,8 +28,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: 
-    transform-origin: left;
+    cursor: pointer; /* was empty */
+    transform-origin: left center; /* specify origin */
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: transform 0.8s ease;
