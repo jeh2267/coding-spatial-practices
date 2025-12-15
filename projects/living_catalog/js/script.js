@@ -4,17 +4,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 0;
 
     // Load CSV
-    fetch('media.csv')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch CSV');
-            return response.text();
+    fetch('media/media.csv')
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to fetch CSV');
+            return res.text();
         })
         .then(data => {
-            const rows = data.split('\n').slice(1); // skip header
-            rows.forEach(row => {
-                if (!row.trim()) return; // skip empty rows
-                const [id, title, src, link, type] = row.split(',');
-                createPage({id, title, src, link, type});
+            const lines = data.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+
+            lines.slice(1).forEach(line => {
+                if (!line.trim()) return;
+                // Split CSV, remove surrounding quotes and spaces
+                const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g).map(v => v.replace(/^"|"$/g, '').trim());
+
+                const media = {
+                    id: values[headers.indexOf('id')],
+                    title: values[headers.indexOf('title')],
+                    src: values[headers.indexOf('src')],
+                    link: values[headers.indexOf('link')],
+                    type: values[headers.indexOf('type')]
+                };
+                createPage(media);
             });
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
@@ -24,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         page.classList.add('page');
 
         if (media.type === 'link') {
-            // Thumbnail links to external site
             const a = document.createElement('a');
             a.href = media.link;
             a.target = '_blank';
@@ -51,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-    // Flip page logic
-    album.addEventListener('click', (e) => {
+    // Flip pages
+    album.addEventListener('click', e => {
         const rect = album.getBoundingClientRect();
         const x = e.clientX - rect.left;
 
