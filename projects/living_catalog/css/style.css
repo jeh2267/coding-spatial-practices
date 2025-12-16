@@ -5,14 +5,12 @@
     --green: #7E8F5B;
     --brown: #4B3A2F;
     --cream: #F7F3E8;
-
 }   
-
 
 body {
     font-family: var(--font);
-    background-color: var(--green);
     color: var(--brown);
+    background-color: var(--green);
     /* transition: background-color 0.4s, color 0.4s; */
     padding: 3rem;
     /* box-sizing: border-box; */
