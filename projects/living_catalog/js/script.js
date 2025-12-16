@@ -108,6 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
 
+        pages.forEach(page => page.classList.remove('flipped'));
+
         layoutGrid();
     });
 

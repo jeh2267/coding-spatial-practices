@@ -96,8 +96,10 @@ button.active {
 /* Pages in grid view */
 #album.grid-view .page {
     position: absolute;
+    display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     width: auto;
     height: auto;
     max-width: 260px;
