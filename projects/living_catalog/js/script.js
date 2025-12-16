@@ -142,39 +142,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === aboutModal) aboutModal.style.display = 'none';
     });
 
-    /* Grid layout */
     function layoutGrid() {
         const padding = 20;
-        const placed = [];
+        const minGap = 20;
         const containerWidth = album.clientWidth;
+        const placed = [];
+        let currentY = padding;
 
         pages.forEach(page => {
-            page.style.position = 'absolute';
+            const mediaEl = page.querySelector('img, video');
 
             const placeMedia = () => {
-                const rect = page.getBoundingClientRect();
-                const pageWidth = rect.width;
-                const pageHeight = rect.height;
+                const pageWidth = page.offsetWidth;
+                const pageHeight = page.offsetHeight;
 
-                let x, y, overlap, tries = 0;
+                const x = Math.random() * (containerWidth - pageWidth - padding);
+                const y = currentY;
 
-                do {
-                    x = Math.random() * (containerWidth - pageWidth - padding);
-                    y = Math.random() * (window.innerHeight + pages.length * 300);
-                    overlap = placed.some(r =>
-                        !(x + pageWidth < r.x || x > r.x + r.width || y + pageHeight < r.y || y > r.y + r.height)
-                    );
-                    tries++;
-                    if (tries > 200) break;
-                } while (overlap);
-
+                page.style.position = 'absolute';
                 page.style.left = x + 'px';
                 page.style.top = y + 'px';
-                placed.push({ x, y, width: pageWidth + padding, height: pageHeight + padding });
+
+                placed.push({ x, y, width: pageWidth, height: pageHeight });
+                currentY += pageHeight + minGap;
+                album.style.height = currentY + padding + 'px';
             };
 
-            // Wait for image/video to load
-            const mediaEl = page.querySelector('img, video');
             if (mediaEl.tagName === 'IMG') {
                 if (!mediaEl.complete) {
                     mediaEl.onload = placeMedia;
@@ -187,11 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 placeMedia();
             }
         });
-
-        // Adjust album height to fit all media
-        setTimeout(() => {
-            const maxY = placed.reduce((max, r) => Math.max(max, r.y + r.height), 0);
-            album.style.height = (maxY + padding) + 'px';
-        }, 300);
     }
+
 });
