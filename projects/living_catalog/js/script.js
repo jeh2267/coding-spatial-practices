@@ -125,32 +125,43 @@ document.addEventListener('DOMContentLoaded', () => {
         album.classList.remove('grid-view');
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
+        if (frontPage) frontPage.style.display = 'flex';
 
-        // Show front page and navigation
-        if (frontPage) {
-            frontPage.style.display = 'flex';
-            frontPage.style.zIndex = 2000;
-            frontPage.classList.remove('flipped');
-        }
-        prevBtn.style.display = 'block';
-        nextBtn.style.display = 'block';
-        filterContainer.style.display = 'none';
-        mediaFilter.value = 'all';
-
-        // Reset all pages
         pages.forEach((page, i) => {
-            page.classList.remove('flipped');
             page.style.position = 'absolute';
             page.style.top = '0';
             page.style.left = '0';
             page.style.transform = '';
-            page.style.display = 'flex';
             page.style.zIndex = 1000 - i;
         });
-
         currentPage = 0;
-        album.style.height = 'auto'; // reset any extra height from grid
     });
+
+    //     // Show front page and navigation
+    //     if (frontPage) {
+    //         frontPage.style.display = 'flex';
+    //         frontPage.style.zIndex = 2000;
+    //         frontPage.classList.remove('flipped');
+    //     }
+    //     prevBtn.style.display = 'block';
+    //     nextBtn.style.display = 'block';
+    //     filterContainer.style.display = 'none';
+    //     mediaFilter.value = 'all';
+
+    //     // Reset all pages
+    //     pages.forEach((page, i) => {
+    //         page.classList.remove('flipped');
+    //         page.style.position = 'absolute';
+    //         page.style.top = '0';
+    //         page.style.left = '0';
+    //         page.style.transform = '';
+    //         page.style.display = 'flex';
+    //         page.style.zIndex = 1000 - i;
+    //     });
+
+    //     currentPage = 0;
+    //     album.style.height = 'auto'; // reset any extra height from grid
+    // });
 
     albumViewBtn.classList.add('active');
 
