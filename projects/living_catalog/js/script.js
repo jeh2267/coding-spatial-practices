@@ -116,6 +116,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function restoreAlbumLayout() {
+    pages.forEach((page, index) => {
+        page.style.position = 'absolute';
+        page.style.top = '0';
+        page.style.left = '0';
+        page.style.width = '100%';
+        page.style.height = '100%';
+        page.style.transform = '';
+        page.style.zIndex = 1000 - index;
+    });
+
+    currentPage = 0;
+
+    // Unflip everything
+    if (frontPage) frontPage.classList.remove('flipped');
+    pages.forEach(page => page.classList.remove('flipped'));
+    }
+
+
     /* -------------------------------
        Next / Prev Flip Buttons
     -------------------------------- */
@@ -144,8 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
-        
-        setGridPositions
+
+        setGridPositions();
     });
 
     albumViewBtn.addEventListener('click', () => {
@@ -153,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
 
-        if (frontPage) frontPage.style.display = 'flex';
+        restoreAlbumLayout();
     });
 
     // Default active button
