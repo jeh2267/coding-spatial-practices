@@ -82,7 +82,11 @@ button.active {
 
 #front-page {
     background-color: var(--brown);
-    color: var(--cream)
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 
