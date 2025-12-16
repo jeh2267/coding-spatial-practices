@@ -177,8 +177,7 @@ button.active {
 }
 
 #album.grid-view + #prev,
-#album.grid-view + #next,
-#prev, #next {
+#album.grid-view + #next {
     display: none;
 }
 
