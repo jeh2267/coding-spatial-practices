@@ -191,6 +191,47 @@ footer .about button {
     margin-right: 0;
 }
 
+.modal {
+    display: none;                /* Hidden by default */
+    position: fixed;
+    z-index: 5000;                /* On top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;               /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Semi-transparent background */
+}
+
+/* Modal content box */
+.modal-content {
+    background-color: var(--brown);
+    color: var(--yellow);
+    margin: 10% auto;             /* Center vertically */
+    padding: 20px;
+    border: 2px solid var(--blue);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    color: var(--yellow);
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: var(--blue);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #album {
