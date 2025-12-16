@@ -97,19 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Album / Grid toggle
-    gridViewBtn.addEventListener('click', () => {
-        album.classList.add('grid-view');
-        gridViewBtn.classList.add('active');
-        albumViewBtn.classList.remove('active');
+gridViewBtn.addEventListener('click', () => {
+    album.classList.add('grid-view');
+    gridViewBtn.classList.add('active');
+    albumViewBtn.classList.remove('active');
 
-        if (frontPage) frontPage.style.display = 'none';
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-        filterContainer.style.display = 'inline-block';
+    if (frontPage) frontPage.style.display = 'none';
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+    filterContainer.style.display = 'inline-block';
 
-        layoutGrid();
-    });
+    // REMOVE flipped state before showing Grid
+    pages.forEach(page => page.classList.remove('flipped'));
+
+    layoutGrid();
+});
+
 
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
@@ -122,18 +125,26 @@ document.addEventListener('DOMContentLoaded', () => {
         filterContainer.style.display = 'none';
         mediaFilter.value = 'all';
 
-        // Reset album to initial load state
+        // FULL RESET: remove flipped state, reset positions and z-index
         pages.forEach((page, i) => {
+            page.classList.remove('flipped');
             page.style.position = 'absolute';
             page.style.top = '0';
             page.style.left = '0';
             page.style.transform = '';
             page.style.display = 'flex';
-            page.classList.remove('flipped');
             page.style.zIndex = 1000 - i;
         });
+
+        if (frontPage) {
+            frontPage.style.zIndex = 2000;
+            frontPage.classList.remove('flipped');
+            frontPage.style.display = 'flex';
+        }
+
         currentPage = 0;
     });
+
 
     albumViewBtn.classList.add('active');
 

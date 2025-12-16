@@ -104,6 +104,7 @@ button.active {
     padding: 0;
     transform: none !important;
     flex-direction: column;
+    background: none;
 }
 
 /* Front page */
@@ -173,19 +174,21 @@ button.active {
     padding: 4px 8px;
     border-radius: 4px;
     border: 2px solid var(--yellow);
-    background-color: var(--cream);
-    color: var(--blue);
+    background-color: var(--yellow);
+    color: var(--cream);
     cursor: pointer;
 }
 
 #filterContainer select:hover {
     border-color: var(--brown);
+    background-color: var(--cream);
+    color: var(--brown)
 }
 
 /* Footer About button */
 footer .about {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     color: var(--cream);
     padding: 16px;
