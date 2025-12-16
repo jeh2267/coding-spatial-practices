@@ -45,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             shuffleArray(mediaArray);
             mediaArray.forEach(media => createPage(media));
-        }).catch(err => console.error('Failed to fetch CSV:', err));
+        })
+        .catch(err => console.error('Failed to fetch CSV:', err));
 
     function createPage(media) {
         const page = document.createElement('div');
@@ -74,11 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         page.style.zIndex = 1000 - pages.length;
+        page.style.position = 'absolute';
+        page.style.top = '0';
+        page.style.left = '0';
+        page.style.display = 'flex';
+
         album.appendChild(page);
         pages.push(page);
     }
 
-    // Next/Prev
+    // Next/Prev functionality
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -97,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Grid View
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -107,25 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
 
-        // REMOVE flipped state before showing Grid
+        // Remove flipped state before showing Grid
         pages.forEach(page => page.classList.remove('flipped'));
 
         layoutGrid();
     });
 
-
+    // Album View: reset to initial load state
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
 
-        if (frontPage) frontPage.style.display = 'flex';
+        // Show front page and navigation
+        if (frontPage) {
+            frontPage.style.display = 'flex';
+            frontPage.style.zIndex = 2000;
+            frontPage.classList.remove('flipped');
+        }
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
         filterContainer.style.display = 'none';
         mediaFilter.value = 'all';
 
-        // FULL RESET: remove flipped state, reset positions and z-index
+        // Reset all pages
         pages.forEach((page, i) => {
             page.classList.remove('flipped');
             page.style.position = 'absolute';
@@ -136,15 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
             page.style.zIndex = 1000 - i;
         });
 
-        if (frontPage) {
-            frontPage.style.zIndex = 2000;
-            frontPage.classList.remove('flipped');
-            frontPage.style.display = 'flex';
-        }
-
         currentPage = 0;
+        album.style.height = 'auto'; // reset any extra height from grid
     });
-
 
     albumViewBtn.classList.add('active');
 
@@ -153,14 +159,14 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 
-    // Grid layout: ordered grid
+    // Grid layout
     function layoutGrid() {
         const padding = 20;
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
         pages.forEach(page => {
-            if (page.style.display === 'none') return; // skip hidden
+            if (page.style.display === 'none') return;
 
             page.style.position = 'absolute';
             page.style.display = 'flex';
