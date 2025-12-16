@@ -37,6 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const page = document.createElement('div');
         page.classList.add('page');
 
+        // content wrapper (page already uses column flex)
+        const mediaWrap = document.createElement('div');
+        mediaWrap.classList.add('media'); // THIS holds the image/video and will flex to fill space
+
         // Media element
         let mediaEl;
         if (media.type === 'link') {
@@ -48,22 +52,25 @@ document.addEventListener('DOMContentLoaded', () => {
             mediaEl.src = 'media/' + media.src;
             mediaEl.alt = media.title;
             a.appendChild(mediaEl);
-            page.appendChild(a);
+            mediaWrap.appendChild(a);
         } else if (media.type === 'video') {
             mediaEl = document.createElement('video');
             mediaEl.src = 'media/' + media.src;
             mediaEl.controls = true;
-            page.appendChild(mediaEl);
+            mediaWrap.appendChild(mediaEl);
         } else if (media.type === 'image') {
             mediaEl = document.createElement('img');
             mediaEl.src = 'media/' + media.src;
             mediaEl.alt = media.title;
-            page.appendChild(mediaEl);
+            mediaWrap.appendChild(mediaEl);
         }
 
         // Title below media
         const titleEl = document.createElement('h2');
         titleEl.textContent = media.title;
+
+        // assemble
+        page.appendChild(mediaWrap);
         page.appendChild(titleEl);
 
         page.style.zIndex = 1000 - pages.length;
