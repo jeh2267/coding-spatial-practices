@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage = 0;
     });
 
-    albumViewBtn.classList.add('active');
+    // albumViewBtn.classList.add('active');
 
     // About modal
     aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');

@@ -96,6 +96,8 @@ button.active {
 /* Pages in grid view */
 #album.grid-view .page {
     position: absolute;
+    justify-content: center;
+    align-items: center;
     width: auto;
     height: auto;
     max-width: 260px;
@@ -166,27 +168,28 @@ button.active {
 /* Filter dropdown */
 #filterContainer {
     margin-left: 1rem;
-    color: var(--brown);
+    color: var(--yellow);
 }
 
 #filterContainer select {
     font-family: var(--font);
     padding: 4px 8px;
     border-radius: 4px;
-    border: 2px solid var(--brown);
-    background-color: var(--cream);
-    color: var(--blue);
+    border: 2px solid var(--yellow);
+    background-color: var(--yellow);
+    color: var(--cream);
     cursor: pointer;
 }
 
 #filterContainer select:hover {
-    border-color: var(--blue);
+    background-color: var(--cream);
+    color: var(--yellow);
 }
 
 /* Footer About button */
 footer .about {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     color: var(--cream);
     padding: 16px;
