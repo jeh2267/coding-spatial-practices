@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    /* load data and make pages */
+    /* load csv and create pages */
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             shuffleArray(mediaArray);
-
             mediaArray.forEach(media => createPage(media));
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
@@ -79,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-    /* next/prev buttons */
+    /* next / prev buttons */
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -98,14 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* album/grid toggle */
+    /* album / grid toggle */
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
 
         if (frontPage) frontPage.style.display = 'none';
-
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
 
@@ -118,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gridViewBtn.classList.remove('active');
 
         if (frontPage) frontPage.style.display = 'flex';
-
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
 
@@ -149,33 +146,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* grid */
+    /* grid layout */
     function layoutGrid() {
         const padding = 20;
         const placed = [];
         const containerWidth = album.clientWidth;
 
+        let loadedCount = 0;
+
         pages.forEach(page => {
-            const pageWidth = page.offsetWidth;
-            const pageHeight = page.offsetHeight;
-            let x, y, tries = 0, overlap;
+            const mediaEl = page.querySelector('img, video');
 
-            do {
-                x = Math.random() * (containerWidth - pageWidth - padding);
-                y = Math.random() * (window.innerHeight + pages.length * 300); 
-                overlap = placed.some(rect => !(x + pageWidth < rect.x || x > rect.x + rect.width || y + pageHeight < rect.y || y > rect.y + rect.height));
-                tries++;
-                if (tries > 100) break;
-            } while (overlap);
+            mediaEl.onload = mediaEl.onloadedmetadata = () => {
+                loadedCount++;
 
-            page.style.left = x + 'px';
-            page.style.top = y + 'px';
+                const pageWidth = mediaEl.offsetWidth;
+                const pageHeight = mediaEl.offsetHeight;
 
-            placed.push({x, y, width: pageWidth + padding, height: pageHeight + padding});
+                let x, y, tries = 0, overlap;
+
+                do {
+                    x = Math.random() * (containerWidth - pageWidth - padding);
+                    y = Math.random() * 2000; 
+                    overlap = placed.some(rect => !(x + pageWidth < rect.x || x > rect.x + rect.width || y + pageHeight < rect.y || y > rect.y + rect.height));
+                    tries++;
+                    if (tries > 100) break;
+                } while (overlap);
+
+                page.style.left = x + 'px';
+                page.style.top = y + 'px';
+                page.style.position = 'absolute';
+
+                placed.push({x, y, width: pageWidth + padding, height: pageHeight + padding});
+
+                if (loadedCount === pages.length) {
+                    const maxY = placed.reduce((max, rect) => Math.max(max, rect.y + rect.height), 0);
+                    album.style.height = (maxY + padding) + 'px';
+                }
+            };
         });
-
-        const maxY = placed.reduce((max, rect) => Math.max(max, rect.y + rect.height), 0);
-        album.style.height = (maxY + padding) + 'px';
     }
-
 });
