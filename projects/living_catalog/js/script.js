@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //     page.style.zIndex = 1000 - pages.length;
     //     album.appendChild(page);
     //     pages.push(page);
-    // }
+    }
 
     /* -------------------------------
        Next / Prev Flip Buttons

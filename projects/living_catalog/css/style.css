@@ -106,7 +106,7 @@ button.active {
 }
 
 /* Page title */
-.page h2 {
+/* .page h2 {
     margin: 8px 0 4px 0;
     text-align: center;
     font-size: 1.1em;
@@ -116,7 +116,7 @@ button.active {
     word-break: break-word;
     overflow-wrap: anywhere;
     line-height: 1.2;
-}
+} */
 
 /* Flip buttons */
 #prev, #next {
