@@ -184,11 +184,6 @@ button.active {
     background: rgba(0,0,0,0.05);
 }
 
-#album.grid-view .page:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
 #album.grid-view .page img,
 #album.grid-view .page video {
     max-width: 260px;
