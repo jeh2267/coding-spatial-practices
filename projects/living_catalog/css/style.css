@@ -31,12 +31,11 @@ body {
 
 /* Page style */
 .page {
-    /* width: 100%;
-    height: 100%; */
+    width: 100%;
+    height: 100%;
     position: aboslute;
     top: 0;
     left: 0;
-    /* background: var(--cream); */
     display: flex;
     flex-direction: column-reverse;
     justify-content: flex-start;
@@ -45,9 +44,9 @@ body {
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: transform 0.8s ease, box-shadow 0.3s ease;
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
     overflow: hidden;
-    padding: 5px; /* give space around content */
+    padding: 5px;
     z-index: 0;
     
 }
@@ -69,7 +68,7 @@ body {
     flex-direction: column;
     margin-bottom: 10px;
     /* border-radius: 5px; */
-    /* display: block; */
+    display: block;
 }
 
 /* Title below media */
