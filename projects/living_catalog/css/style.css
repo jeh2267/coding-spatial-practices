@@ -166,7 +166,7 @@ button.active {
 /* Filter dropdown */
 #filterContainer {
     margin-left: 1rem;
-    color: var(--yellow);
+    color: var(--cream);
 }
 
 #filterContainer select {

@@ -97,21 +97,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-gridViewBtn.addEventListener('click', () => {
-    album.classList.add('grid-view');
-    gridViewBtn.classList.add('active');
-    albumViewBtn.classList.remove('active');
+    gridViewBtn.addEventListener('click', () => {
+        album.classList.add('grid-view');
+        gridViewBtn.classList.add('active');
+        albumViewBtn.classList.remove('active');
 
-    if (frontPage) frontPage.style.display = 'none';
-    prevBtn.style.display = 'none';
-    nextBtn.style.display = 'none';
-    filterContainer.style.display = 'inline-block';
+        if (frontPage) frontPage.style.display = 'none';
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        filterContainer.style.display = 'inline-block';
 
-    // REMOVE flipped state before showing Grid
-    pages.forEach(page => page.classList.remove('flipped'));
+        // REMOVE flipped state before showing Grid
+        pages.forEach(page => page.classList.remove('flipped'));
 
-    layoutGrid();
-});
+        layoutGrid();
+    });
 
 
     albumViewBtn.addEventListener('click', () => {
