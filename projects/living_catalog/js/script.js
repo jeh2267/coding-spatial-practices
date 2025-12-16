@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
-    /* shuffle media */
+    /* Helper: shuffle array */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    /* load csv and create pages */
+    /* Load CSV and create pages */
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             shuffleArray(mediaArray);
             mediaArray.forEach(media => createPage(media));
-        })
-        .catch(err => console.error('Failed to fetch CSV:', err));
 
-    /* create individual media pages */
+        }).catch(err => console.error('Failed to fetch CSV:', err));
+
+    /* Create page */
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-    /* next / prev buttons */
+    /* Next / Prev */
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* album / grid toggle */
+    /* Album / Grid toggle */
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -131,59 +131,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     albumViewBtn.classList.add('active');
 
-    /* about popup */
+    /* About modal */
     aboutBtn.addEventListener('click', () => {
         aboutModal.style.display = 'flex';
     });
-
     closeModal.addEventListener('click', () => {
         aboutModal.style.display = 'none';
     });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === aboutModal) {
-            aboutModal.style.display = 'none';
-        }
+    window.addEventListener('click', e => {
+        if (e.target === aboutModal) aboutModal.style.display = 'none';
     });
 
-    /* grid layout */
+    /* Grid layout */
     function layoutGrid() {
         const padding = 20;
         const placed = [];
         const containerWidth = album.clientWidth;
 
-        let loadedCount = 0;
-
         pages.forEach(page => {
-            const mediaEl = page.querySelector('img, video');
+            page.style.position = 'absolute';
 
-            mediaEl.onload = mediaEl.onloadedmetadata = () => {
-                loadedCount++;
+            const placeMedia = () => {
+                const rect = page.getBoundingClientRect();
+                const pageWidth = rect.width;
+                const pageHeight = rect.height;
 
-                const pageWidth = mediaEl.offsetWidth;
-                const pageHeight = mediaEl.offsetHeight;
-
-                let x, y, tries = 0, overlap;
+                let x, y, overlap, tries = 0;
 
                 do {
                     x = Math.random() * (containerWidth - pageWidth - padding);
-                    y = Math.random() * 2000; 
-                    overlap = placed.some(rect => !(x + pageWidth < rect.x || x > rect.x + rect.width || y + pageHeight < rect.y || y > rect.y + rect.height));
+                    y = Math.random() * (window.innerHeight + pages.length * 300);
+                    overlap = placed.some(r =>
+                        !(x + pageWidth < r.x || x > r.x + r.width || y + pageHeight < r.y || y > r.y + r.height)
+                    );
                     tries++;
-                    if (tries > 100) break;
+                    if (tries > 200) break;
                 } while (overlap);
 
                 page.style.left = x + 'px';
                 page.style.top = y + 'px';
-                page.style.position = 'absolute';
-
-                placed.push({x, y, width: pageWidth + padding, height: pageHeight + padding});
-
-                if (loadedCount === pages.length) {
-                    const maxY = placed.reduce((max, rect) => Math.max(max, rect.y + rect.height), 0);
-                    album.style.height = (maxY + padding) + 'px';
-                }
+                placed.push({ x, y, width: pageWidth + padding, height: pageHeight + padding });
             };
+
+            // Wait for image/video to load
+            const mediaEl = page.querySelector('img, video');
+            if (mediaEl.tagName === 'IMG') {
+                if (!mediaEl.complete) {
+                    mediaEl.onload = placeMedia;
+                } else {
+                    placeMedia();
+                }
+            } else if (mediaEl.tagName === 'VIDEO') {
+                mediaEl.onloadedmetadata = placeMedia;
+            } else {
+                placeMedia();
+            }
         });
+
+        // Adjust album height to fit all media
+        setTimeout(() => {
+            const maxY = placed.reduce((max, r) => Math.max(max, r.y + r.height), 0);
+            album.style.height = (maxY + padding) + 'px';
+        }, 300);
     }
 });
