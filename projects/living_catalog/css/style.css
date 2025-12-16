@@ -108,16 +108,6 @@ button.active {
     margin: 8px 0;
 }
 
-/* Linked media border only in album view */
-#album:not(.grid-view) .page a {
-    display: inline-block;
-    border: 3px solid var(--blue);
-    border-radius: 8px;
-    padding: 4px;
-    box-sizing: border-box;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
 /* Hover effect for linked media in album view */
 #album:not(.grid-view) .page a:hover {
     transform: scale(1.05);
