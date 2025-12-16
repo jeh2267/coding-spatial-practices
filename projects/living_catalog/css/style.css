@@ -104,6 +104,15 @@ button.active {
     margin: 8px 0;
 }
 
+.page link {
+    border: #0000EE;
+    border-radius: 10px;
+}
+
+.page link:hover {
+    border: var(--yellow)
+}
+
 /* Page title */
 /* .page h2 {
     margin: 8px 0 4px 0;
