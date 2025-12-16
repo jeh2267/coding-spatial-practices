@@ -1,124 +1,114 @@
 :root {
-    --font: Oswald, sans-serif;
-    --blue: #2FB7B0;
-    --yellow: #F2B705;
-    --green: #7E8F5B;
-    --brown: #4B3A2F;
-    --cream: #F7F3E8;
+    --font: Oswald, sans-serif;      /* Define main font for site */
+    --blue: #2FB7B0;                 /* Example color variable */
+    --yellow: #F2B705;               /* Example color variable */
+    --green: #7E8F5B;                /* Example background color */
+    --brown: #4B3A2F;                /* Example text/border color */
+    --cream: #F7F3E8;                /* Example page background color */
 }   
 
 body {
-    font-family: var(--font);
-    color: var(--brown);
-    background-color: var(--green);
-    /* transition: background-color 0.4s, color 0.4s; */
-    padding: 3rem;
-    /* box-sizing: border-box; */
-    /* overflow-x: hidden; */
+    font-family: var(--font);        /* Use font from root variable */
+    color: var(--brown);             /* Default text color */
+    background-color: var(--green);  /* Page background color */
+    padding: 3rem;                   /* Space around entire body content */
 }
 
 /* Album container */
 #album {
-    max-width: 90vh;
-    height: 70vh;
-    perspective: 2000px;
-    margin: auto;
-    position: relative;
-    overflow: hidden;
-    border: 20px groove var(--brown);
-    background-color: var(--cream);
+    max-width: 90vh;                 /* Limit width relative to viewport height */
+    height: 70vh;                    /* Set fixed height for album */
+    perspective: 2000px;             /* Enables 3D effect for page flipping */
+    margin: auto;                     /* Center album horizontally */
+    position: relative;               /* Required for absolute positioning of pages inside */
+    overflow: hidden;                 /* Hide content that spills outside album container */
+    border: 20px groove var(--brown); /* Give album a thick decorative border */
+    background-color: var(--cream);   /* Album background color */
 }
 
 /* Page style */
 .page {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: flex-start;
-    align-items: center;
-    transform-origin: left;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    transition: transform 0.8s ease, box-shadow 0.3s ease;
-    box-sizing: border-box;
-    overflow: hidden;
-    padding: 5px;
-    z-index: 1000;
-    visibility: hidden;
+    width: 100%;                      /* Fill full album width */
+    height: 100%;                     /* Fill full album height */
+    position: absolute;               /* Stack all pages on top of each other */
+    top: 0;                           /* Align to top of album */
+    left: 0;                          /* Align to left of album */
+    display: flex;                    /* Use flexbox for layout inside page */
+    flex-direction: column;           /* Arrange children vertically: media then title */
+    justify-content: center;          /* Vertically center media/title inside page */
+    align-items: center;              /* Horizontally center media/title inside page */
+    transform-origin: left;           /* Set origin for page flip rotation */
+    backface-visibility: hidden;      /* Hide back side when rotated */
+    transform-style: preserve-3d;     /* Maintain 3D context for child elements */
+    transition: transform 0.8s ease, box-shadow 0.3s ease; /* Smooth flip and shadow animation */
+    box-sizing: border-box;           /* Include padding/border in width/height */
+    overflow: hidden;                 /* Prevent content from spilling outside page */
+    padding: 5px;                     /* Small padding inside each page */
+    z-index: 1000;                    /* Stack pages on top of each other */
 }
 
+/* Flipped page */
 .page.flipped {
-    transform: rotateY(-180deg);
+    transform: rotateY(-180deg);      /* Rotate page around Y-axis to simulate flip */
+    z-index: 900;                     /* Place flipped pages behind the next page */
 }
 
 /* Media inside pages */
-.page img, .page video {
-    max-width: 90%;
-    max-height: 70%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    align-items: center;
-    justify-content: center;
-    display: block;
-    flex-direction: column;
-    margin-bottom: 10px;
-    /* border-radius: 5px; */
-    display: block;
+.page img,
+.page video {
+    max-width: 90%;                   /* Scale media down if too wide */
+    max-height: 70%;                  /* Scale media down if too tall */
+    width: auto;                      /* Maintain natural aspect ratio */
+    height: auto;                     /* Maintain natural aspect ratio */
+    object-fit: contain;              /* Fit media inside container without cropping */
+    display: block;                   /* Remove inline spacing issues for images/videos */
+    margin-bottom: 10px;              /* Space between media and title */
 }
 
 /* Title below media */
 .page h2 {
-    margin: 8px 0 10px 0;
-    text-align: center;
-    font-size: 1.2em;
-    width: 100%;
-    flex-shrink: 0;
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    line-height: 1.2;
+    margin: 8px 0 10px 0;             /* Space above and below title */
+    text-align: center;               /* Center text horizontally */
+    font-size: 1.2em;                 /* Slightly larger font size */
+    width: 100%;                      /* Take full width of page */
+    flex-shrink: 0;                   /* Prevent title from shrinking */
+    word-break: break-word;           /* Break long words if needed */
+    overflow-wrap: anywhere;           /* Prevent overflow for long text */
+    line-height: 1.2;                 /* Adjust line spacing for readability */
 }
 
+/* Flip buttons */
 #prev, #next {
-    position: absolute;
-    top: 0;
-    width: 10%;
-    height: 100%;
-    z-index: 3000;
-    cursor: pointer;
-    transition: background 0.2s;
+    position: absolute;               /* Position on edges of album */
+    top: 0;                           /* Align to top */
+    width: 10%;                       /* Take 10% of album width for clickable edge */
+    height: 100%;                     /* Full album height */
+    z-index: 3000;                    /* On top of everything else */
+    cursor: pointer;                  /* Show pointer cursor on hover */
+    transition: background 0.2s;      /* Smooth background color change on hover */
 }
 
-#prev {
-    left: 0;
-}
-
-#next {
-    right: 0;
-}
+#prev { left: 0; }                    /* Left edge for previous page */
+#next { right: 0; }                   /* Right edge for next page */
 
 /* Hover effect */
 #prev:hover, #next:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.05);     /* Light grey overlay when hovered to indicate clickable area */
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
     #album {
-        width: 95%;
-        height: 60vh;
+        width: 95%;                    /* Wider album on smaller screens */
+        height: 60vh;                  /* Reduce height for mobile screens */
     }
 
     .page h2 {
-        font-size: 1em;
+        font-size: 1em;                /* Slightly smaller titles on mobile */
     }
 
     #prev, #next {
-        width: 15%;
+        width: 15%;                     /* Make flip buttons larger on mobile for easier tapping */
     }
 }
 
