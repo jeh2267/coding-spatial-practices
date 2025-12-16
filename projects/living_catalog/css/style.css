@@ -48,7 +48,7 @@ button.active {
 }
 
 /* Album container */
-/* #album {
+#album {
     max-width: 90vh;
     height: 70vh;
     perspective: 2000px;
@@ -56,21 +56,14 @@ button.active {
     position: relative;
     overflow: hidden;
     border: 20px groove var(--brown);
-} */
+}
 
 /* Page style */
 .page {
-    max-width: 90vh;
-    height: 70vh;
-    perspective: 2000px;
-    margin: auto;
-    position: relative;
-    overflow: hidden;
-    border: 20px groove var(--brown);
     background: var(--cream);
     width: 100%;
     height: 100%;
-    /* position: absolute; */
+    position: absolute;
     top: 0;
     left: 0;
     display: flex;
