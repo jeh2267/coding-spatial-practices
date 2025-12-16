@@ -11,11 +11,10 @@ body {
     font-family: var(--font);
     color: var(--brown);
     background-color: var(--green);
-    margin: 0;
     padding: 3rem;
+    margin: 0;
 }
 
-/* Header buttons */
 header {
     display: flex;
     justify-content: space-between;
@@ -47,7 +46,6 @@ button.active {
     transform: scale(1.05);
 }
 
-/* Album container */
 #album {
     max-width: 90vh;
     height: 70vh;
@@ -58,21 +56,22 @@ button.active {
     border: 20px groove var(--brown);
 }
 
-/* Grid view: album becomes a scrollable canvas */
 #album.grid-view {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    max-width: none;
-    border: none;
-    background: none;
-    perspective: none;
-    overflow: visible;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
     padding: 20px;
     box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    border: none;
+    background: none;
+    position: relative;
+    overflow: visible;
 }
 
-/* Pages in album view */
 .page {
     background: var(--cream);
     width: 100%;
@@ -93,21 +92,17 @@ button.active {
     z-index: 1000;
 }
 
-/* Pages in grid view */
 #album.grid-view .page {
-    position: absolute;
-    width: auto;
+    position: relative;
+    width: 260px;
     height: auto;
-    max-width: 260px;
-    max-height: 260px;
     background: none;
     border: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: none;
     padding: 0;
     transform: none !important;
 }
 
-/* Front page */
 #front-page {
     background-color: var(--brown);
     color: var(--cream);
@@ -121,13 +116,11 @@ button.active {
     display: none;
 }
 
-/* Flipped page */
 .page.flipped {
     transform: rotateY(-180deg);
     z-index: 900;
 }
 
-/* Media inside pages */
 .page img,
 .page video {
     max-width: 100%;
@@ -139,14 +132,12 @@ button.active {
     margin: 8px 0;
 }
 
-/* Hover effect for linked media in album view */
-#album:not(.grid-view) .page a:hover {
+#album .page a:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 12px var(--yellow);
     cursor: pointer;
 }
 
-/* Flip buttons */
 #prev, #next {
     position: absolute;
     top: 0;
@@ -164,7 +155,12 @@ button.active {
     background: rgba(0,0,0,0.05);
 }
 
-/* Footer About button */
+#album.grid-view .page img,
+#album.grid-view .page video {
+    max-width: 260px;
+    max-height: 260px;
+}
+
 footer .about {
     display: flex;
     justify-content: flex-start;
@@ -179,7 +175,6 @@ footer .about button {
     margin-right: 0;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -221,7 +216,6 @@ footer .about button {
     color: var(--blue);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     #album {
         width: 95%;

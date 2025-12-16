@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
-    /* -------------------------------
-       Helper: Shuffle Array
-    -------------------------------- */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -25,9 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    /* -------------------------------
-       Load CSV and create pages
-    -------------------------------- */
+    /* Load CSV and create pages */
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -51,9 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
 
-    /* -------------------------------
-       Create individual page
-    -------------------------------- */
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
@@ -84,9 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-    /* -------------------------------
-       Next / Prev Flip Buttons
-    -------------------------------- */
+    /* Next / Prev buttons */
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -105,9 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* -------------------------------
-       Album / Grid Toggle
-    -------------------------------- */
+    /* Album / Grid Toggle */
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -117,7 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
 
-        layoutGrid();
+        pages.forEach(page => {
+            page.style.position = 'relative';
+            page.style.left = '';
+            page.style.top = '';
+            page.style.zIndex = '';
+        });
+
+        album.style.height = 'auto';
     });
 
     albumViewBtn.addEventListener('click', () => {
@@ -129,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
 
-        // Reset album positioning for flipping
         pages.forEach((page, i) => {
             page.style.position = 'absolute';
             page.style.top = '0';
@@ -142,9 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     albumViewBtn.classList.add('active');
 
-    /* -------------------------------
-       About Modal
-    -------------------------------- */
+    /* About Modal */
     aboutBtn.addEventListener('click', () => {
         aboutModal.style.display = 'flex';
     });
@@ -158,57 +150,4 @@ document.addEventListener('DOMContentLoaded', () => {
             aboutModal.style.display = 'none';
         }
     });
-
-    /* -------------------------------
-       Grid Layout
-    -------------------------------- */
-    function layoutGrid() {
-        const padding = 20; // spacing between items
-        const bottomPadding = 200; // so last media is above footer
-        const placed = [];
-        const containerWidth = album.clientWidth;
-
-        pages.forEach(page => {
-            const mediaEl = page.querySelector('img, video');
-
-            // Wait until media has loaded
-            const placeMedia = () => {
-                const pageWidth = page.offsetWidth;
-                const pageHeight = page.offsetHeight;
-                let x, y, tries = 0, overlap;
-
-                do {
-                    x = Math.random() * (containerWidth - pageWidth - padding);
-                    y = Math.random() * (album.scrollHeight + 800); // generous vertical space
-                    overlap = placed.some(rect => !(x + pageWidth < rect.x || x > rect.x + rect.width || y + pageHeight < rect.y || y > rect.y + rect.height));
-                    tries++;
-                    if (tries > 500) break; // fallback to avoid infinite loop
-                } while (overlap);
-
-                page.style.position = 'absolute';
-                page.style.left = x + 'px';
-                page.style.top = y + 'px';
-
-                placed.push({x, y, width: pageWidth + padding, height: pageHeight + padding});
-            };
-
-            if (mediaEl.tagName === 'IMG') {
-                if (!mediaEl.complete) {
-                    mediaEl.onload = placeMedia;
-                } else {
-                    placeMedia();
-                }
-            } else if (mediaEl.tagName === 'VIDEO') {
-                mediaEl.onloadedmetadata = placeMedia;
-            } else {
-                placeMedia();
-            }
-        });
-
-        // After all media have loaded, adjust album height
-        setTimeout(() => {
-            const maxY = placed.reduce((max, rect) => Math.max(max, rect.y + rect.height), 0);
-            album.style.height = (maxY + bottomPadding) + 'px';
-        }, 500);
-    }
 });
