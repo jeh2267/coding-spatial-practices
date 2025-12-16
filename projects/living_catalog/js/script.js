@@ -143,14 +143,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function layoutGrid() {
-        const padding = 10;
+        const padding = 10; // smaller gap between items
         const placed = [];
         const containerWidth = album.clientWidth;
 
-        pages.forEach(page => {
-            page.style.position = 'absolute';
+        const mediaLoadPromises = pages.map(page => {
+            const mediaEl = page.querySelector('img, video');
 
-            const placeMedia = () => {
+            return new Promise(resolve => {
+                if (!mediaEl) {
+                    resolve(page);
+                } else if (mediaEl.tagName === 'IMG') {
+                    if (!mediaEl.complete) {
+                        mediaEl.onload = () => resolve(page);
+                    } else {
+                        resolve(page);
+                    }
+                } else if (mediaEl.tagName === 'VIDEO') {
+                    mediaEl.addEventListener('loadeddata', () => resolve(page), { once: true });
+                } else {
+                    resolve(page);
+                }
+            });
+        });
+
+        Promise.all(mediaLoadPromises).then(() => {
+            pages.forEach(page => {
                 const pageWidth = page.offsetWidth;
                 const pageHeight = page.offsetHeight;
 
@@ -166,32 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (tries > 200) break;
                 } while (overlap);
 
+                page.style.position = 'absolute';
                 page.style.left = x + 'px';
                 page.style.top = y + 'px';
+
                 placed.push({ x, y, width: pageWidth + padding, height: pageHeight + padding });
-            };
+            });
 
-            const mediaEl = page.querySelector('img, video');
-            if (!mediaEl) {
-                placeMedia();
-            } else if (mediaEl.tagName === 'IMG') {
-                if (!mediaEl.complete) {
-                    mediaEl.onload = placeMedia;
-                } else {
-                    placeMedia();
-                }
-            } else if (mediaEl.tagName === 'VIDEO') {
-                // Use 'loadeddata' instead of 'loadedmetadata' to ensure proper dimensions
-                mediaEl.addEventListener('loadeddata', placeMedia, { once: true });
-            } else {
-                placeMedia();
-            }
-        });
-
-        // Adjust album height after all placements
-        setTimeout(() => {
+            // Adjust album height so last items are above footer
             const maxY = placed.reduce((max, r) => Math.max(max, r.y + r.height), 0);
             album.style.height = (maxY + 100) + 'px';
-        }, 500);
+        });
     }
+
 });
