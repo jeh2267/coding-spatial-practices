@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Album / Grid toggle
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -108,8 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
 
+        // Reset all flips
+        pages.forEach(page => page.classList.remove('flipped'));
+
         layoutGrid();
     });
+
 
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
@@ -122,16 +125,20 @@ document.addEventListener('DOMContentLoaded', () => {
         filterContainer.style.display = 'none';
         mediaFilter.value = 'all';
 
+        // Reset pages to initial stacked state
         pages.forEach((page, i) => {
             page.style.position = 'absolute';
             page.style.top = '0';
             page.style.left = '0';
             page.style.transform = '';
             page.style.display = 'flex';
-            page.style.zIndex = 1000 - i;
+            page.classList.remove('flipped');  // remove flip classes
+            page.style.zIndex = 1000 - i;      // reset z-index
         });
-        currentPage = 0;
+
+        currentPage = 0;  // reset album flip counter
     });
+
 
     albumViewBtn.classList.add('active');
 
