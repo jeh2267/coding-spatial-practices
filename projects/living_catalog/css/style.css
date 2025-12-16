@@ -113,6 +113,19 @@ button.active {
     z-index: auto;
 }
 
+
+#album.grid-view .page img,
+#album.grid-view .page video,
+#album.grid-view .page a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    margin: 0;
+}
+
 /* Front page */
 #front-page {
     background-color: var(--brown);
