@@ -43,3 +43,56 @@
     <script src="js/script.js"></script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Album</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+    <div>
+        <button id="albumViewBtn" class="active">Album</button>
+        <button id="gridViewBtn">Scroll</button>
+    </div>
+    <div id="filterContainer" style="display:none;">
+        <label for="mediaFilter">Filter: </label>
+        <select id="mediaFilter">
+            <option value="all">All</option>
+            <option value="image">Images</option>
+            <option value="video">Videos</option>
+            <option value="link">Links</option>
+        </select>
+    </div>
+</header>
+
+<div id="album">
+    <div id="front-page" class="page">
+            <h1>Scrapbook</h1>
+            <p>Click to Open</p>
+    </div>
+</div>
+
+<div id="prev"></div>
+<div id="next"></div>
+
+<footer>
+    <div class="about">
+        <button id="aboutBtn">About</button>
+    </div>
+</footer>
+
+<div id="aboutModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+            <h2>About this Scrapbook</h2>
+            <p>This scrapbook is a catalog of memories and resources. No order, no hierarchy, no theme—just some things I don't want to forget.</p>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
