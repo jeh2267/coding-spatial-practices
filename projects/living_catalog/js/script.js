@@ -146,10 +146,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const padding = 20;
         const minGap = 20;
         const containerWidth = album.clientWidth;
-        const placed = [];
         let currentY = padding;
 
-        pages.forEach(page => {
+        let i = 0;
+
+        function placeNext() {
+            if (i >= pages.length) {
+                album.style.height = currentY + padding + 'px';
+                return;
+            }
+
+            const page = pages[i];
             const mediaEl = page.querySelector('img, video');
 
             const placeMedia = () => {
@@ -163,9 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 page.style.left = x + 'px';
                 page.style.top = y + 'px';
 
-                placed.push({ x, y, width: pageWidth, height: pageHeight });
                 currentY += pageHeight + minGap;
-                album.style.height = currentY + padding + 'px';
+
+                i++;
+                placeNext(); // place the next media after this one
             };
 
             if (mediaEl.tagName === 'IMG') {
@@ -179,7 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 placeMedia();
             }
-        });
+        }
+
+        placeNext();
     }
+
 
 });
