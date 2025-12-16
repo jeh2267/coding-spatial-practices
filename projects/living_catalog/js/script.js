@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
-        page.dataset.type = media.type; // for filter
+        page.dataset.type = media.type;
 
         let mediaEl;
         if (media.type === 'link') {
@@ -140,15 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 
-    // Grid layout: ordered grid, responsive
+    // Grid layout
     function layoutGrid() {
         const padding = 20;
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
         pages.forEach(page => {
+            if (page.style.display === 'none') return; // skip hidden pages
+
             page.style.position = 'absolute';
             page.style.display = 'flex';
+            page.style.justifyContent = 'center';
+            page.style.alignItems = 'center';
 
             const rect = page.getBoundingClientRect();
             const pageWidth = rect.width || 260;
@@ -169,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         album.style.height = (y + rowHeight + padding) + 'px';
     }
 
-    // Filter functionality
+    // Filter
     mediaFilter.addEventListener('change', () => {
         const selected = mediaFilter.value;
         pages.forEach(page => {
@@ -179,6 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 page.style.display = 'none';
             }
         });
-        layoutGrid(); // re-layout visible media
+        layoutGrid();
     });
 });
