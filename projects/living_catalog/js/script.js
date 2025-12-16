@@ -45,16 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             shuffleArray(mediaArray);
             mediaArray.forEach(media => createPage(media));
-        })
-        .catch(err => console.error('Failed to fetch CSV:', err));
-
-    // Store initial state of pages
-    const initialPageStates = [];
+        }).catch(err => console.error('Failed to fetch CSV:', err));
 
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
-        page.dataset.type = media.type;
+        page.dataset.type = media.type; // for filter
 
         let mediaEl;
         if (media.type === 'link') {
@@ -77,27 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
             page.appendChild(mediaEl);
         }
 
-        // Set initial layout for album view
-        page.style.position = 'absolute';
-        page.style.top = '0';
-        page.style.left = '0';
-        page.style.display = 'flex';
         page.style.zIndex = 1000 - pages.length;
-
         album.appendChild(page);
         pages.push(page);
-
-        // Save initial state
-        initialPageStates.push({
-            zIndex: page.style.zIndex,
-            position: page.style.position,
-            top: page.style.top,
-            left: page.style.left,
-            display: page.style.display
-        });
     }
 
-    // Next/Prev functionality
+    // Next/Prev
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -116,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Grid View
+    // Album / Grid toggle
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -127,9 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
 
-        // Remove flipped state before showing Grid
-        pages.forEach(page => page.classList.remove('flipped'));
-
         layoutGrid();
     });
 
@@ -138,53 +116,43 @@ document.addEventListener('DOMContentLoaded', () => {
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
 
-        // Show front page
-        if (frontPage) {
-            frontPage.style.display = 'flex';
-            frontPage.style.zIndex = 2000;
-            frontPage.classList.remove('flipped');
-        }
-
+        if (frontPage) frontPage.style.display = 'flex';
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
         filterContainer.style.display = 'none';
         mediaFilter.value = 'all';
 
-        // Reset pages to their initial state
         pages.forEach((page, i) => {
-            const state = initialPageStates[i];
-            page.classList.remove('flipped');
-            page.style.position = state.position;
-            page.style.top = state.top;
-            page.style.left = state.left;
-            page.style.display = state.display;
-            page.style.zIndex = state.zIndex;
+            page.style.position = 'absolute';
+            page.style.top = '0';
+            page.style.left = '0';
             page.style.transform = '';
+            page.style.display = 'flex';
+            page.style.zIndex = 1000 - i;
         });
-
         currentPage = 0;
-        album.style.height = 'auto';
     });
+
+    albumViewBtn.classList.add('active');
 
     // About modal
     aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');
     closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 
-    // Grid layout
+    // Grid layout: ordered grid, responsive
     function layoutGrid() {
         const padding = 20;
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
         pages.forEach(page => {
-            if (page.style.display === 'none') return;
-
             page.style.position = 'absolute';
             page.style.display = 'flex';
 
-            const pageWidth = page.offsetWidth || 260;
-            const pageHeight = page.offsetHeight || 260;
+            const rect = page.getBoundingClientRect();
+            const pageWidth = rect.width || 260;
+            const pageHeight = rect.height || 260;
 
             if (x + pageWidth > containerWidth - padding) {
                 x = 0;
@@ -211,6 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 page.style.display = 'none';
             }
         });
-        layoutGrid();
+        layoutGrid(); // re-layout visible media
     });
 });
