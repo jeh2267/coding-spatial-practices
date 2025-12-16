@@ -96,42 +96,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setGridPositions() {
-        const padding = 40;
+        const padding = 60;
 
-        const containerWidth = window.innerWidth;
-        const containerHeight = window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
 
         pages.forEach(page => {
-            const pageRect = page.getBoundingClientRect();
+            const rect = page.getBoundingClientRect();
 
-            const maxX = containerWidth - pageRect.width - padding;
-            const maxY = containerHeight - pageRect.height - padding;
+            const maxX = width - rect.width - padding;
+            const maxY = height - rect.height - padding;
 
-            const randX = Math.random() * Math.max(maxX, 0);
-            const randY = Math.random() * Math.max(maxY, 0);
-
-            page.style.left = `${randX}px`;
-            page.style.top = `${randY}px`;
+            page.style.left = `${Math.random() * Math.max(maxX, 0)}px`;
+            page.style.top = `${Math.random() * Math.max(maxY, 0)}px`;
             page.style.zIndex = Math.floor(Math.random() * 10) + 1;
         });
     }
 
     function restoreAlbumLayout() {
-    pages.forEach((page, index) => {
-        page.style.position = 'absolute';
-        page.style.top = '0';
-        page.style.left = '0';
-        page.style.width = '100%';
-        page.style.height = '100%';
-        page.style.transform = '';
-        page.style.zIndex = 1000 - index;
-    });
+        pages.forEach((page, index) => {
+            page.style.position = 'absolute';
+            page.style.top = '0';
+            page.style.left = '0';
+            page.style.width = '100%';
+            page.style.height = '100%';
+            page.style.transform = '';
+            page.style.zIndex = 1000 - index;
+        });
 
-    currentPage = 0;
-
-    // Unflip everything
-    if (frontPage) frontPage.classList.remove('flipped');
-    pages.forEach(page => page.classList.remove('flipped'));
+        pages.forEach(page => page.classList.remove('flipped'));
+        if (frontPage) frontPage.classList.remove('flipped');
+        currentPage = 0;
     }
 
 
