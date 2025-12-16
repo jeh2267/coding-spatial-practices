@@ -55,7 +55,7 @@ body {
 }
 
 /* Media inside pages */
-.page img, .page video, .content-wrapper {
+.page img, .page video {
     max-width: 90%;
     max-height: 70%;
     width: auto;
@@ -93,18 +93,18 @@ body {
     transition: background 0.2s;
 }
 
-/* #prev {
+#prev {
     left: 0;
 }
 
 #next {
     right: 0;
-} */
+}
 
 /* Hover effect */
-/* #prev:hover, #next:hover {
-    background: rgba(0,0,0,0.05); /* light grey */
-/* } */
+#prev:hover, #next:hover {
+    background: rgba(0,0,0,0.05);
+}
 
 @media (max-width: 768px) {
     #album {
@@ -130,7 +130,7 @@ body {
     height: 100%; */
     /* display: block; */
 
-/* .controls, .about {
+/* .views, .about {
     display: flex;
     gap: 0.5rem;
 }
