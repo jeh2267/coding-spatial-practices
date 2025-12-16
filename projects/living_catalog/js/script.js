@@ -151,13 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
-        pages.forEach(page => {
+        const visiblePages = pages.filter(page => page.style.display !== 'none');
+
+        visiblePages.forEach(page => {
             if (page.style.display === 'none') return;
 
             page.style.position = 'absolute';
             page.style.display = 'flex';
-            page.style.justifyContent = 'center';
-            page.style.alignItems = 'center';
+            // page.style.justifyContent = 'center';
+            // page.style.alignItems = 'center';
 
             const rect = page.getBoundingClientRect();
             const pageWidth = rect.width || 260;
