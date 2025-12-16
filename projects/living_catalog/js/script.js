@@ -142,59 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === aboutModal) aboutModal.style.display = 'none';
     });
 
+    /* Grid layout: random offsets without measuring width/height */
     function layoutGrid() {
-        const padding = 10; // smaller gap between items
-        const placed = [];
-        const containerWidth = album.clientWidth;
-
-        const mediaLoadPromises = pages.map(page => {
-            const mediaEl = page.querySelector('img, video');
-
-            return new Promise(resolve => {
-                if (!mediaEl) {
-                    resolve(page);
-                } else if (mediaEl.tagName === 'IMG') {
-                    if (!mediaEl.complete) {
-                        mediaEl.onload = () => resolve(page);
-                    } else {
-                        resolve(page);
-                    }
-                } else if (mediaEl.tagName === 'VIDEO') {
-                    mediaEl.addEventListener('loadeddata', () => resolve(page), { once: true });
-                } else {
-                    resolve(page);
-                }
-            });
-        });
-
-        Promise.all(mediaLoadPromises).then(() => {
-            pages.forEach(page => {
-                const pageWidth = page.offsetWidth;
-                const pageHeight = page.offsetHeight;
-
-                let x, y, overlap, tries = 0;
-
-                do {
-                    x = Math.random() * (containerWidth - pageWidth - padding);
-                    y = Math.random() * (window.innerHeight + pages.length * 100);
-                    overlap = placed.some(r =>
-                        !(x + pageWidth < r.x || x > r.x + r.width || y + pageHeight < r.y || y > r.y + r.height)
-                    );
-                    tries++;
-                    if (tries > 200) break;
-                } while (overlap);
-
-                page.style.position = 'absolute';
-                page.style.left = x + 'px';
-                page.style.top = y + 'px';
-
-                placed.push({ x, y, width: pageWidth + padding, height: pageHeight + padding });
-            });
-
-            // Adjust album height so last items are above footer
-            const maxY = placed.reduce((max, r) => Math.max(max, r.y + r.height), 0);
-            album.style.height = (maxY + 100) + 'px';
+        pages.forEach(page => {
+            // small random offset for playful look
+            const offsetX = Math.floor(Math.random() * 40) - 20; // -20px to +20px
+            const offsetY = Math.floor(Math.random() * 40) - 20; // -20px to +20px
+            page.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
         });
     }
-
 });
