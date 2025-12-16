@@ -142,9 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === aboutModal) aboutModal.style.display = 'none';
     });
 
-    /* Grid layout */
     function layoutGrid() {
-        const padding = 20;
+        const padding = 10;
         const placed = [];
         const containerWidth = album.clientWidth;
 
@@ -152,15 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
             page.style.position = 'absolute';
 
             const placeMedia = () => {
-                const rect = page.getBoundingClientRect();
-                const pageWidth = rect.width;
-                const pageHeight = rect.height;
+                const pageWidth = page.offsetWidth;
+                const pageHeight = page.offsetHeight;
 
                 let x, y, overlap, tries = 0;
 
                 do {
                     x = Math.random() * (containerWidth - pageWidth - padding);
-                    y = Math.random() * (window.innerHeight + pages.length * 300);
+                    y = Math.random() * (window.innerHeight + pages.length * 100);
                     overlap = placed.some(r =>
                         !(x + pageWidth < r.x || x > r.x + r.width || y + pageHeight < r.y || y > r.y + r.height)
                     );
@@ -173,25 +171,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 placed.push({ x, y, width: pageWidth + padding, height: pageHeight + padding });
             };
 
-            // Wait for image/video to load
             const mediaEl = page.querySelector('img, video');
-            if (mediaEl.tagName === 'IMG') {
+            if (!mediaEl) {
+                placeMedia();
+            } else if (mediaEl.tagName === 'IMG') {
                 if (!mediaEl.complete) {
                     mediaEl.onload = placeMedia;
                 } else {
                     placeMedia();
                 }
             } else if (mediaEl.tagName === 'VIDEO') {
-                mediaEl.onloadedmetadata = placeMedia;
+                // Use 'loadeddata' instead of 'loadedmetadata' to ensure proper dimensions
+                mediaEl.addEventListener('loadeddata', placeMedia, { once: true });
             } else {
                 placeMedia();
             }
         });
 
-        // Adjust album height to fit all media
+        // Adjust album height after all placements
         setTimeout(() => {
             const maxY = placed.reduce((max, r) => Math.max(max, r.y + r.height), 0);
-            album.style.height = (maxY + padding) + 'px';
-        }, 300);
+            album.style.height = (maxY + 100) + 'px';
+        }, 500);
     }
 });
