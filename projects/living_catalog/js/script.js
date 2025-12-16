@@ -14,24 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let pages = [];
     let currentPage = 0;
 
-    if (frontPage) frontPage.style.zIndex = 2000;
-
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
     // Load media from CSV
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
             const lines = data.trim().split('\n');
             const headers = lines[0].split(',').map(h => h.trim());
-
-            const mediaArray = lines.slice(1).filter(line => line.trim()).map(line => {
+            const mediaArray = lines.slice(1).filter(l => l.trim()).map(line => {
                 const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g)
                     .map(v => v.replace(/^"|"$/g, '').trim());
                 return {
@@ -42,11 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     type: values[headers.indexOf('type')]
                 };
             });
-
-            shuffleArray(mediaArray);
-            mediaArray.forEach(media => createPage(media));
-        })
-        .catch(err => console.error('Failed to fetch CSV:', err));
+            mediaArray.forEach(createPage);
+        });
 
     function createPage(media) {
         const page = document.createElement('div');
@@ -75,16 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         page.style.zIndex = 1000 - pages.length;
-        page.style.position = 'absolute';
-        page.style.top = '0';
-        page.style.left = '0';
-        page.style.display = 'flex';
-
         album.appendChild(page);
         pages.push(page);
     }
 
-    // Next/Prev functionality
+    // Prev/Next buttons
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -103,91 +84,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Grid View
+    // Toggle Grid View
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         album.classList.remove('album-view');
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
-
-        if (frontPage) frontPage.style.display = 'none';
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
-
-        // Remove flipped state before showing Grid
-        pages.forEach(page => page.classList.remove('flipped'));
-
+        pages.forEach(p => p.classList.remove('flipped'));
         layoutGrid();
     });
 
-    // Album View: reset to initial load state
+    // Toggle Album View
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
         album.classList.add('album-view');
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
-
-        // Show front page and navigation
-        if (frontPage) {
-            frontPage.style.display = 'flex';
-            frontPage.style.zIndex = 2000;
-            frontPage.classList.remove('flipped');
-        }
-        prevBtn.style.display = 'block';
-        nextBtn.style.display = 'block';
         filterContainer.style.display = 'none';
-        mediaFilter.value = 'all';
-
-        // Reset all pages
-        pages.forEach((page, i) => {
-            page.classList.remove('flipped');
-            page.style.position = 'absolute';
-            page.style.top = '0';
-            page.style.left = '0';
-            page.style.transform = '';
-            page.style.display = 'flex';
-            page.style.zIndex = 1000 - i;
-        });
-
         currentPage = 0;
-        album.style.height = 'auto'; // reset any extra height from grid
     });
-
-    albumViewBtn.classList.add('active');
-
-    // About modal
-    aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');
-    closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
-    window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 
     // Grid layout
     function layoutGrid() {
         const padding = 20;
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
-
         pages.forEach(page => {
             if (page.style.display === 'none') return;
-
-            page.style.position = 'absolute';
-            page.style.display = 'flex';
-
             const pageWidth = page.offsetWidth || 260;
             const pageHeight = page.offsetHeight || 260;
-
             if (x + pageWidth > containerWidth - padding) {
                 x = 0;
                 y += rowHeight + padding;
                 rowHeight = 0;
             }
-
             page.style.left = x + 'px';
             page.style.top = y + 'px';
             x += pageWidth + padding;
             rowHeight = Math.max(rowHeight, pageHeight);
         });
-
         album.style.height = (y + rowHeight + padding) + 'px';
     }
 
@@ -195,12 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
     mediaFilter.addEventListener('change', () => {
         const selected = mediaFilter.value;
         pages.forEach(page => {
-            if (selected === 'all' || page.dataset.type === selected) {
-                page.style.display = 'flex';
-            } else {
-                page.style.display = 'none';
-            }
+            page.style.display = selected === 'all' || page.dataset.type === selected ? 'flex' : 'none';
         });
         layoutGrid();
     });
+
+    // About modal
+    aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');
+    closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
+    window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 });
