@@ -90,9 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     //     titleEl.textContent = media.title;
     //     page.appendChild(titleEl);
 
-    //     page.style.zIndex = 1000 - pages.length;
-    //     album.appendChild(page);
-    //     pages.push(page);
+        page.style.zIndex = 1000 - pages.length;
+        album.appendChild(page);
+        pages.push(page);
     }
 
     /* -------------------------------
