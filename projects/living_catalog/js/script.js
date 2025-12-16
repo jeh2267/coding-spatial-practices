@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             const lines = data.trim().split('\n');
             const headers = lines[0].split(',').map(h => h.trim());
+
             const mediaArray = lines.slice(1).filter(line => line.trim()).map(line => {
                 const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g)
                     .map(v => v.replace(/^"|"$/g, '').trim());
@@ -102,42 +103,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Grid View toggle
+    // Grid View
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
-        album.classList.remove('album-view');
-
+        album
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
 
-        filterContainer.style.display = 'inline-block';
+        if (frontPage) frontPage.style.display = 'none';
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
-        if (frontPage) frontPage.style.display = 'none';
+        filterContainer.style.display = 'inline-block';
 
+        // Remove flipped state before showing Grid
         pages.forEach(page => page.classList.remove('flipped'));
+
         layoutGrid();
     });
 
-    // Album View toggle (reset to initial load state)
+    // Album View: reset to initial load state
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
         album.classList.add('album-view');
-
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
 
-        filterContainer.style.display = 'none';
-        mediaFilter.value = 'all';
-
-        prevBtn.style.display = 'block';
-        nextBtn.style.display = 'block';
+        // Show front page and navigation
         if (frontPage) {
             frontPage.style.display = 'flex';
             frontPage.style.zIndex = 2000;
             frontPage.classList.remove('flipped');
         }
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+        filterContainer.style.display = 'none';
+        mediaFilter.value = 'all';
 
+        // Reset all pages
         pages.forEach((page, i) => {
             page.classList.remove('flipped');
             page.style.position = 'absolute';
@@ -149,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         currentPage = 0;
-        album.style.height = '70vh'; // reset height to album view
+        album.style.height = 'auto'; // reset any extra height from grid
     });
 
     albumViewBtn.classList.add('active');
