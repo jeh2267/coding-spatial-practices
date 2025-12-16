@@ -72,6 +72,7 @@ button.active {
 
     overflow: hidden; /* IMPORTANT */
     z-index: 1;
+    perspective: none;
 }
 
 /* Page style */
@@ -106,6 +107,8 @@ button.active {
     padding: 0;
 
     transform: none !important;
+    transform-style: flat;
+    backface-visibility: visible;
 }
 
 #front-page {
