@@ -58,18 +58,16 @@ button.active {
     border: 20px groove var(--brown);
 }
 
-/* Grid view */
+/* Grid view container */
 #album.grid-view {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    max-width: none;
-    border: none;
-    background: none;
-    perspective: none;
-    overflow: visible;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
     padding: 20px;
     box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
 /* Pages in album view */
@@ -95,15 +93,15 @@ button.active {
 
 /* Pages in grid view */
 #album.grid-view .page {
-    position: absolute;
-    width: auto;
-    height: auto;
+    position: relative;
+    width: 200px;
+    height: 200px;
     max-width: 260px;
     max-height: 260px;
     background: none;
     border: none;
     padding: 0;
-    transform: none !important;
+    transform: none;
 }
 
 /* Front page */
@@ -161,26 +159,6 @@ button.active {
 
 #prev:hover, #next:hover {
     background: rgba(0,0,0,0.05);
-}
-
-/* Filter dropdown */
-#filterContainer {
-    margin-left: 1rem;
-    color: var(--brown);
-}
-
-#filterContainer select {
-    font-family: var(--font);
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 2px solid var(--brown);
-    background-color: var(--cream);
-    color: var(--blue);
-    cursor: pointer;
-}
-
-#filterContainer select:hover {
-    border-color: var(--blue);
 }
 
 /* Footer About button */
@@ -246,6 +224,7 @@ footer .about button {
         width: 95%;
         height: 60vh;
     }
+
     #prev, #next {
         width: 15%;
     }

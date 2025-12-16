@@ -8,14 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const aboutBtn = document.getElementById('aboutBtn');
     const aboutModal = document.getElementById('aboutModal');
     const closeModal = document.querySelector('.modal .close');
-    const filterContainer = document.getElementById('filterContainer');
-    const mediaFilter = document.getElementById('mediaFilter');
 
     let pages = [];
     let currentPage = 0;
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
+    /* Helper: shuffle array */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // Load media from CSV
+    /* Load CSV and create pages */
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -45,12 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             shuffleArray(mediaArray);
             mediaArray.forEach(media => createPage(media));
+
         }).catch(err => console.error('Failed to fetch CSV:', err));
 
+    /* Create page */
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
-        page.dataset.type = media.type; // for filter
 
         let mediaEl;
         if (media.type === 'link') {
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-    // Next/Prev
+    /* Next / Prev */
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Album / Grid toggle
+    /* Album / Grid toggle */
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (frontPage) frontPage.style.display = 'none';
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
-        filterContainer.style.display = 'inline-block';
 
         layoutGrid();
     });
@@ -119,15 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (frontPage) frontPage.style.display = 'flex';
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
-        filterContainer.style.display = 'none';
-        mediaFilter.value = 'all';
 
         pages.forEach((page, i) => {
             page.style.position = 'absolute';
             page.style.top = '0';
             page.style.left = '0';
             page.style.transform = '';
-            page.style.display = 'flex';
             page.style.zIndex = 1000 - i;
         });
         currentPage = 0;
@@ -135,50 +131,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     albumViewBtn.classList.add('active');
 
-    // About modal
-    aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');
-    closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
-    window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
-
-    // Grid layout: ordered grid, responsive
-    function layoutGrid() {
-        const padding = 20;
-        const containerWidth = album.clientWidth;
-        let x = 0, y = 0, rowHeight = 0;
-
-        pages.forEach(page => {
-            page.style.position = 'absolute';
-            page.style.display = 'flex';
-
-            const rect = page.getBoundingClientRect();
-            const pageWidth = rect.width || 260;
-            const pageHeight = rect.height || 260;
-
-            if (x + pageWidth > containerWidth - padding) {
-                x = 0;
-                y += rowHeight + padding;
-                rowHeight = 0;
-            }
-
-            page.style.left = x + 'px';
-            page.style.top = y + 'px';
-            x += pageWidth + padding;
-            rowHeight = Math.max(rowHeight, pageHeight);
-        });
-
-        album.style.height = (y + rowHeight + padding) + 'px';
-    }
-
-    // Filter functionality
-    mediaFilter.addEventListener('change', () => {
-        const selected = mediaFilter.value;
-        pages.forEach(page => {
-            if (selected === 'all' || page.dataset.type === selected) {
-                page.style.display = 'flex';
-            } else {
-                page.style.display = 'none';
-            }
-        });
-        layoutGrid(); // re-layout visible media
+    /* About modal */
+    aboutBtn.addEventListener('click', () => {
+        aboutModal.style.display = 'flex';
     });
+    closeModal.addEventListener('click', () => {
+        aboutModal.style.display = 'none';
+    });
+    window.addEventListener('click', e => {
+        if (e.target === aboutModal) aboutModal.style.display = 'none';
+    });
+
+    /* Grid layout: random offsets without measuring width/height */
+    function layoutGrid() {
+        pages.forEach(page => {
+            // small random offset for playful look
+            const offsetX = Math.floor(Math.random() * 40) - 20; // -20px to +20px
+            const offsetY = Math.floor(Math.random() * 40) - 20; // -20px to +20px
+            page.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        });
+    }
 });
