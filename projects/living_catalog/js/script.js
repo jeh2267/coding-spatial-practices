@@ -151,19 +151,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
+        // Only layout visible pages
         const visiblePages = pages.filter(page => page.style.display !== 'none');
 
         visiblePages.forEach(page => {
-            if (page.style.display === 'none') return;
-
             page.style.position = 'absolute';
             page.style.display = 'flex';
-            // page.style.justifyContent = 'center';
-            // page.style.alignItems = 'center';
+            page.style.justifyContent = 'center';
+            page.style.alignItems = 'center';
+            page.style.flexDirection = 'column';
 
-            const rect = page.getBoundingClientRect();
-            const pageWidth = rect.width || 260;
-            const pageHeight = rect.height || 260;
+            // Ensure media is loaded
+            const mediaEl = page.querySelector('img, video');
+            let pageWidth = 260, pageHeight = 260; // fallback sizes
+            if (mediaEl) {
+                pageWidth = mediaEl.naturalWidth || mediaEl.videoWidth || 260;
+                pageHeight = mediaEl.naturalHeight || mediaEl.videoHeight || 260;
+            }
+
+            // Scale down if too big
+            pageWidth = Math.min(pageWidth, 260);
+            pageHeight = Math.min(pageHeight, 260);
 
             if (x + pageWidth > containerWidth - padding) {
                 x = 0;
@@ -171,14 +179,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 rowHeight = 0;
             }
 
+            page.style.width = pageWidth + 'px';
+            page.style.height = pageHeight + 'px';
             page.style.left = x + 'px';
             page.style.top = y + 'px';
+
             x += pageWidth + padding;
             rowHeight = Math.max(rowHeight, pageHeight);
         });
 
         album.style.height = (y + rowHeight + padding) + 'px';
     }
+
 
     // Filter functionality
     mediaFilter.addEventListener('change', () => {
