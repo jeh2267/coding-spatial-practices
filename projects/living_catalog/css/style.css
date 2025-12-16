@@ -72,9 +72,6 @@ body {
     /* display: block; */
 }
 
-p {
-   flex-shrink: 0;
-
 /* Title below media */
 /* .page h2 {
     margin: 8px 0 10px 0;
@@ -110,7 +107,7 @@ p {
 /* Hover effect */
 /* #prev:hover, #next:hover {
     background: rgba(0,0,0,0.05); /* light grey */
-} */
+/* }
 
 /* Mobile-friendly */
 /* @media (max-width: 768px) {
