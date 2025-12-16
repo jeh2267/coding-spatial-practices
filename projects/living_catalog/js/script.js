@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Album / Grid toggle
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -107,12 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
 
-        // Reset all flips
-        pages.forEach(page => page.classList.remove('flipped'));
-
         layoutGrid();
     });
-
 
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
@@ -125,20 +122,18 @@ document.addEventListener('DOMContentLoaded', () => {
         filterContainer.style.display = 'none';
         mediaFilter.value = 'all';
 
-        // Reset pages to initial stacked state
+        // Reset album to initial load state
         pages.forEach((page, i) => {
             page.style.position = 'absolute';
             page.style.top = '0';
             page.style.left = '0';
             page.style.transform = '';
             page.style.display = 'flex';
-            page.classList.remove('flipped');  // remove flip classes
-            page.style.zIndex = 1000 - i;      // reset z-index
+            page.classList.remove('flipped');
+            page.style.zIndex = 1000 - i;
         });
-
-        currentPage = 0;  // reset album flip counter
+        currentPage = 0;
     });
-
 
     albumViewBtn.classList.add('active');
 
@@ -147,23 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 
-    // Grid layout
+    // Grid layout: ordered grid
     function layoutGrid() {
         const padding = 20;
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
         pages.forEach(page => {
-            if (page.style.display === 'none') return; // skip hidden pages
+            if (page.style.display === 'none') return; // skip hidden
 
             page.style.position = 'absolute';
             page.style.display = 'flex';
-            page.style.justifyContent = 'center';
-            page.style.alignItems = 'center';
 
-            const rect = page.getBoundingClientRect();
-            const pageWidth = rect.width || 260;
-            const pageHeight = rect.height || 260;
+            const pageWidth = page.offsetWidth || 260;
+            const pageHeight = page.offsetHeight || 260;
 
             if (x + pageWidth > containerWidth - padding) {
                 x = 0;
@@ -180,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         album.style.height = (y + rowHeight + padding) + 'px';
     }
 
-    // Filter
+    // Filter functionality
     mediaFilter.addEventListener('change', () => {
         const selected = mediaFilter.value;
         pages.forEach(page => {
