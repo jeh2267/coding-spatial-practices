@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             a.rel = 'noopener noreferrer';
             mediaEl = document.createElement('img');
             mediaEl.src = 'media/' + media.src;
-            mediaEl.alt = media.title;
+            // mediaEl.alt = media.title;
             a.appendChild(mediaEl);
             page.appendChild(a);
         } else if (media.type === 'video') {
@@ -81,19 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (media.type === 'image') {
             mediaEl = document.createElement('img');
             mediaEl.src = 'media/' + media.src;
-            mediaEl.alt = media.title;
+            // mediaEl.alt = media.title;
             page.appendChild(mediaEl);
         }
 
         // Title below media
-        const titleEl = document.createElement('h2');
-        titleEl.textContent = media.title;
-        page.appendChild(titleEl);
+    //     const titleEl = document.createElement('h2');
+    //     titleEl.textContent = media.title;
+    //     page.appendChild(titleEl);
 
-        page.style.zIndex = 1000 - pages.length;
-        album.appendChild(page);
-        pages.push(page);
-    }
+    //     page.style.zIndex = 1000 - pages.length;
+    //     album.appendChild(page);
+    //     pages.push(page);
+    // }
 
     /* -------------------------------
        Next / Prev Flip Buttons
