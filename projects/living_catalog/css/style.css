@@ -102,10 +102,13 @@ button.active {
     height: auto;
     max-width: 260px;
     max-height: 260px;
+    max-width: 100%;
+    max-width: 100%;
     background: none;
     border: none;
     padding: 0;
     transform: none !important;
+    z-index: auto;
 }
 
 /* Front page */
@@ -118,9 +121,9 @@ button.active {
     align-items: center;
 }
 
-#album.grid-view #front-page {
+/* #album.grid-view #front-page {
     display: none;
-}
+} */
 
 /* Flipped page */
 .page.flipped {

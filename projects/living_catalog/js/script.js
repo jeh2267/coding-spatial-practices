@@ -111,27 +111,32 @@ document.addEventListener('DOMContentLoaded', () => {
         layoutGrid();
     });
 
+
     albumViewBtn.addEventListener('click', () => {
-        album.classList.remove('grid-view');
-        albumViewBtn.classList.add('active');
-        gridViewBtn.classList.remove('active');
-
-        if (frontPage) frontPage.style.display = 'flex';
-        prevBtn.style.display = 'block';
-        nextBtn.style.display = 'block';
-        filterContainer.style.display = 'none';
-        mediaFilter.value = 'all';
-
-        pages.forEach((page, i) => {
-            page.style.position = 'absolute';
-            page.style.top = '0';
-            page.style.left = '0';
-            page.style.transform = '';
-            page.style.display = 'flex';
-            page.style.zIndex = 1000 - i;
-        });
-        currentPage = 0;
+        location.reload(); // simply reload the page to reset album
     });
+
+    // albumViewBtn.addEventListener('click', () => {
+    //     album.classList.remove('grid-view');
+    //     albumViewBtn.classList.add('active');
+    //     gridViewBtn.classList.remove('active');
+
+    //     if (frontPage) frontPage.style.display = 'flex';
+    //     prevBtn.style.display = 'block';
+    //     nextBtn.style.display = 'block';
+    //     filterContainer.style.display = 'none';
+    //     mediaFilter.value = 'all';
+
+    //     pages.forEach((page, i) => {
+    //         page.style.position = 'absolute';
+    //         page.style.top = '0';
+    //         page.style.left = '0';
+    //         page.style.transform = '';
+    //         page.style.display = 'flex';
+    //         page.style.zIndex = 1000 - i;
+    //     });
+    //     currentPage = 0;
+    // });
 
     // albumViewBtn.classList.add('active');
 
@@ -147,8 +152,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let x = 0, y = 0, rowHeight = 0;
 
         pages.forEach(page => {
+            if (page.style.display === 'none') return;
+
             page.style.position = 'absolute';
             page.style.display = 'flex';
+            page.style.justifyContent = 'center';
+            page.style.alignItems = 'center';
 
             const rect = page.getBoundingClientRect();
             const pageWidth = rect.width || 260;
@@ -173,7 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mediaFilter.addEventListener('change', () => {
         const selected = mediaFilter.value;
         pages.forEach(page => {
-            if (selected === 'all' || page.dataset.type === selected) {
+            const type = page.dataset.type;
+            if (selected === 'all' || type === selected) {
                 page.style.display = 'flex';
             } else {
                 page.style.display = 'none';
