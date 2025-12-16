@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.style.display = 'none';
         filterContainer.style.display = 'inline-block';
 
-        pages.forEach(page => 
+        pages.forEach(page => {
             page.classList.remove('flipped');
             page.style.transform = 'none';
             page.style.zIndex = 'auto';
