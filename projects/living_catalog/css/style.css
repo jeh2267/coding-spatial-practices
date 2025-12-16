@@ -81,6 +81,12 @@ button.active {
     z-index: 1000;
 }
 
+#front-page {
+    background-color: var(--brown);
+    color: var(--cream)
+}
+
+
 /* Flipped page */
 .page.flipped {
     transform: rotateY(-180deg);
@@ -221,7 +227,7 @@ footer .about button {
     position: absolute;
     top: 10px;
     right: 14px;
-    color: var(--yellow);
+    color: var(--brown);
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
