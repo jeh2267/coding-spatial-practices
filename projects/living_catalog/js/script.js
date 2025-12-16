@@ -14,9 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
-    /* -------------------------------
-       Helper: Shuffle Array
-    -------------------------------- */
+    // ------------------------------- Helper: Shuffle Array
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -25,9 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    /* -------------------------------
-       Load CSV and create pages
-    -------------------------------- */
+    // ------------------------------- Load CSV and create pages
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -54,9 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
 
-    /* -------------------------------
-       Create individual page
-    -------------------------------- */
+    // ------------------------------- Create individual page
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
@@ -70,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
             a.rel = 'noopener noreferrer';
             mediaEl = document.createElement('img');
             mediaEl.src = 'media/' + media.src;
-            // mediaEl.alt = media.title;
             a.appendChild(mediaEl);
             page.appendChild(a);
         } else if (media.type === 'video') {
@@ -81,67 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (media.type === 'image') {
             mediaEl = document.createElement('img');
             mediaEl.src = 'media/' + media.src;
-            // mediaEl.alt = media.title;
             page.appendChild(mediaEl);
         }
-
-        // Title below media
-    //     const titleEl = document.createElement('h2');
-    //     titleEl.textContent = media.title;
-    //     page.appendChild(titleEl);
 
         page.style.zIndex = 1000 - pages.length;
         album.appendChild(page);
         pages.push(page);
     }
 
-    function setGridPositions() {
-        const padding = 60;
-
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        pages.forEach(page => {
-            const rect = page.getBoundingClientRect();
-
-            const maxX = width - rect.width - padding;
-            const maxY = height - rect.height - padding;
-
-            page.style.left = `${Math.random() * Math.max(maxX, 0)}px`;
-            page.style.top = `${Math.random() * Math.max(maxY, 0)}px`;
-            page.style.zIndex = Math.floor(Math.random() * 10) + 1;
-        });
-    }
-
-    function applyGridScatter() {
-    pages.forEach(page => {
-        const offsetX = (Math.random() - 0.5) * 20;
-        const offsetY = (Math.random() - 0.5) * 20;
-        const rotation = (Math.random() - 0.5) * 10;
-
-        page.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg)`;
-    });
-    }
-
-    function restoreAlbumLayout() {
-        pages.forEach((page, index) => {
-            page.style.transform = '';
-            page.style.position = 'absolute';
-            page.style.top = '0';
-            page.style.left = '0';
-            page.style.width = '100%';
-            page.style.height = '100%';
-            page.style.zIndex = 1000 - index;
-            page.classList.remove('flipped');
-        });
-
-        if (frontPage) frontPage.classList.remove('flipped');
-        currentPage = 0;
-    }
-
-    /* -------------------------------
-       Next / Prev Flip Buttons
-    -------------------------------- */
+    // ------------------------------- Next / Prev Flip Buttons
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -160,34 +101,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* -------------------------------
-       Album / Grid Toggle
-    -------------------------------- */
+    // ------------------------------- Grid Placement Helpers
+    function placeMediaInGrid(mediaEl, placedRects) {
+        const albumRect = album.getBoundingClientRect();
+        const padding = 10;
+        const maxAttempts = 100;
+
+        const elWidth = mediaEl.offsetWidth;
+        const elHeight = mediaEl.offsetHeight;
+
+        let attempts = 0;
+        let x, y, overlaps;
+
+        do {
+            x = Math.random() * (albumRect.width - elWidth - padding);
+            y = Math.random() * (albumRect.height - elHeight - padding);
+            overlaps = placedRects.some(r =>
+                x < r.x + r.width + padding &&
+                x + elWidth + padding > r.x &&
+                y < r.y + r.height + padding &&
+                y + elHeight + padding > r.y
+            );
+            attempts++;
+        } while (overlaps && attempts < maxAttempts);
+
+        mediaEl.style.position = 'absolute';
+        mediaEl.style.left = `${x}px`;
+        mediaEl.style.top = `${y}px`;
+
+        placedRects.push({ x, y, width: elWidth, height: elHeight });
+    }
+
+    function layoutGrid() {
+        const placedRects = [];
+        pages.forEach(page => {
+            if (page !== frontPage) placeMediaInGrid(page, placedRects);
+        });
+    }
+
+    // ------------------------------- Album / Grid Toggle
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
-
-        setGridPositions();
-        applyGridScatter();
+        if (frontPage) frontPage.style.display = 'none';
+        layoutGrid();
     });
 
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
+        if (frontPage) frontPage.style.display = 'flex';
 
-        restoreAlbumLayout();
+        // Reset page positions for album view
+        pages.forEach((page, i) => {
+            page.style.position = 'absolute';
+            page.style.top = '0';
+            page.style.left = '0';
+            page.style.transform = '';
+            page.style.zIndex = 1000 - i;
+        });
+        currentPage = 0;
     });
 
-    // Default active button
     albumViewBtn.classList.add('active');
 
-    /* -------------------------------
-       About Modal
-    -------------------------------- */
+    // ------------------------------- About Modal
     aboutBtn.addEventListener('click', () => {
-        aboutModal.style.display = 'block';
+        aboutModal.style.display = 'flex';
     });
 
     closeModal.addEventListener('click', () => {
