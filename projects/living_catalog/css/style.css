@@ -111,7 +111,7 @@ button.active {
 /* Hover effect for linked media in album view */
 #album:not(.grid-view) .page a:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px var(--yellow) transparent;
+    box-shadow: 0 4px 12px var(--yellow);
     cursor: pointer;
 }
 
