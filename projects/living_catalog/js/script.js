@@ -109,10 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
         filterContainer.style.display = 'inline-block';
 
         pages.forEach(page => {
+            page.style.transition = 'none';
             page.classList.remove('flipped');
             page.style.transform = 'none';
             page.style.zIndex = 'auto';
         });
+
+        setTimeout(() => {
+            page.style.transition = '';
+        }, 0);
 
         layoutGrid();
     });
@@ -122,29 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload(); // simply reload the page to reset album
     });
 
-    // albumViewBtn.addEventListener('click', () => {
-    //     album.classList.remove('grid-view');
-    //     albumViewBtn.classList.add('active');
-    //     gridViewBtn.classList.remove('active');
-
-    //     if (frontPage) frontPage.style.display = 'flex';
-    //     prevBtn.style.display = 'block';
-    //     nextBtn.style.display = 'block';
-    //     filterContainer.style.display = 'none';
-    //     mediaFilter.value = 'all';
-
-    //     pages.forEach((page, i) => {
-    //         page.style.position = 'absolute';
-    //         page.style.top = '0';
-    //         page.style.left = '0';
-    //         page.style.transform = '';
-    //         page.style.display = 'flex';
-    //         page.style.zIndex = 1000 - i;
-    //     });
-    //     currentPage = 0;
-    // });
-
-    // albumViewBtn.classList.add('active');
 
     // About modal
     aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');
