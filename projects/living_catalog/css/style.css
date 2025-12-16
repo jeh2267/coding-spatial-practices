@@ -67,9 +67,11 @@ button.active {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    gap: 60px;
+    gap: 30px;
 
-    padding: 80px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
     overflow-y: auto;
 
     border: none;
@@ -102,6 +104,8 @@ button.active {
     position: relative;
     width: auto;
     height: auto;
+    max-width: calc(100vw - 120px);
+
 
     background: none;
     border: none;
@@ -272,9 +276,4 @@ footer .about button {
     #prev, #next {
         width: 15%;
     }
-}
-
-#album.grid-view .page:hover {
-    transform: translateY(-6px) scale(1.03);
-    z-index: 5;
 }

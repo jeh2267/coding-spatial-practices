@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyGridScatter() {
     pages.forEach(page => {
-        const offsetX = (Math.random() - 0.5) * 80;
-        const offsetY = (Math.random() - 0.5) * 80;
+        const offsetX = (Math.random() - 0.5) * 20;
+        const offsetY = (Math.random() - 0.5) * 20;
         const rotation = (Math.random() - 0.5) * 10;
 
         page.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg)`;
