@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
-    // ------------------------------- Helper: Shuffle Array
+    /* -------------------------------
+       Helper: Shuffle Array
+    -------------------------------- */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -23,7 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // ------------------------------- Load CSV and create pages
+    /* -------------------------------
+       Load CSV and create pages
+    -------------------------------- */
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -50,7 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
 
-    // ------------------------------- Create individual page
+    /* -------------------------------
+       Create individual page
+    -------------------------------- */
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
@@ -77,12 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
             page.appendChild(mediaEl);
         }
 
+        // Note: Titles are intentionally not rendered
+
         page.style.zIndex = 1000 - pages.length;
         album.appendChild(page);
         pages.push(page);
     }
 
-    // ------------------------------- Next / Prev Flip Buttons
+    /* -------------------------------
+       Next / Prev Flip Buttons
+    -------------------------------- */
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -101,60 +111,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ------------------------------- Grid Placement Helpers
-    function placeMediaInGrid(mediaEl, placedRects) {
-        const albumRect = album.getBoundingClientRect();
-        const padding = 10;
-        const maxAttempts = 100;
-
-        const elWidth = mediaEl.offsetWidth;
-        const elHeight = mediaEl.offsetHeight;
-
-        let attempts = 0;
-        let x, y, overlaps;
-
-        do {
-            x = Math.random() * (albumRect.width - elWidth - padding);
-            y = Math.random() * (albumRect.height - elHeight - padding);
-            overlaps = placedRects.some(r =>
-                x < r.x + r.width + padding &&
-                x + elWidth + padding > r.x &&
-                y < r.y + r.height + padding &&
-                y + elHeight + padding > r.y
-            );
-            attempts++;
-        } while (overlaps && attempts < maxAttempts);
-
-        mediaEl.style.position = 'absolute';
-        mediaEl.style.left = `${x}px`;
-        mediaEl.style.top = `${y}px`;
-
-        placedRects.push({ x, y, width: elWidth, height: elHeight });
-    }
-
-    function layoutGrid() {
-        const placedRects = [];
-        pages.forEach(page => {
-            if (page !== frontPage) placeMediaInGrid(page, placedRects);
-        });
-    }
-
-    // ------------------------------- Album / Grid Toggle
+    /* -------------------------------
+       Album / Grid Toggle
+    -------------------------------- */
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
+
         if (frontPage) frontPage.style.display = 'none';
-        layoutGrid();
+
+        // Hide flip buttons in grid view
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+
+        layoutGrid(); // Your function to layout media in grid
     });
 
     albumViewBtn.addEventListener('click', () => {
         album.classList.remove('grid-view');
         albumViewBtn.classList.add('active');
         gridViewBtn.classList.remove('active');
+
         if (frontPage) frontPage.style.display = 'flex';
 
-        // Reset page positions for album view
+        // Show flip buttons in album view
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+
+        // Reset pages for album view
         pages.forEach((page, i) => {
             page.style.position = 'absolute';
             page.style.top = '0';
@@ -165,9 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage = 0;
     });
 
+    // Default active button
     albumViewBtn.classList.add('active');
 
-    // ------------------------------- About Modal
+    /* -------------------------------
+       About Modal
+    -------------------------------- */
     aboutBtn.addEventListener('click', () => {
         aboutModal.style.display = 'flex';
     });
@@ -181,4 +169,28 @@ document.addEventListener('DOMContentLoaded', () => {
             aboutModal.style.display = 'none';
         }
     });
+
+    /* -------------------------------
+       Grid Layout Helper
+       Example: Random positions without overlap
+    -------------------------------- */
+    function layoutGrid() {
+        const padding = 20;
+        let x = padding;
+        let y = padding;
+        const rowHeight = 280;
+
+        pages.forEach(page => {
+            page.style.position = 'absolute';
+            page.style.transform = '';
+            page.style.top = y + 'px';
+            page.style.left = x + 'px';
+
+            x += page.offsetWidth + padding;
+            if (x + page.offsetWidth > window.innerWidth) {
+                x = padding;
+                y += rowHeight + padding;
+            }
+        });
+    }
 });

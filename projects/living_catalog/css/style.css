@@ -197,11 +197,6 @@ button.active {
     object-fit: contain;
 }
 
-#album.grid-view + #prev,
-#album.grid-view + #next {
-    display: none;
-}
-
 /* Footer About button */
 footer .about {
     display: flex;
