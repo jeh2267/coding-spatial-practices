@@ -108,13 +108,19 @@ button.active {
     margin: 8px 0;
 }
 
-a.page link {
-    border: #0000EE;
+.page a {
+    display: inline-block;
+    border: 3px solid var(--blue);
     border-radius: 10px;
+    padding: 4px;
+    box-sizing: border-box;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-a.page link:hover {
-    border: var(--yellow)
+.page a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    cursor: pointer;
 }
 
 /* Page title */
