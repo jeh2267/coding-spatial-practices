@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
+    // shuffle media
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // Load media from CSV
+    // load media from CSV
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mediaArray.forEach(media => createPage(media));
         }).catch(err => console.error('Failed to fetch CSV:', err));
 
+    // create pages
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
@@ -78,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-    // Next/Prev
+    // next/prev buttons
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Album / Grid toggle
+    // album/grid toggle
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -122,24 +124,21 @@ document.addEventListener('DOMContentLoaded', () => {
         layoutGrid();
     });
 
-
     albumViewBtn.addEventListener('click', () => {
-        location.reload(); // simply reload the page to reset album
+        location.reload();
     });
 
-
-    // About modal
+    // about popup
     aboutBtn.addEventListener('click', () => aboutModal.style.display = 'flex');
     closeModal.addEventListener('click', () => aboutModal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === aboutModal) aboutModal.style.display = 'none'; });
 
-    // Grid layout: ordered grid, responsive
+    // grid layout
     function layoutGrid() {
         const padding = 20;
         const containerWidth = album.clientWidth;
         let x = 0, y = 0, rowHeight = 0;
 
-        // Only layout visible pages
         const visiblePages = pages.filter(page => page.style.display !== 'none');
 
         visiblePages.forEach(page => {
@@ -149,15 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
             page.style.alignItems = 'center';
             page.style.flexDirection = 'column';
 
-            // Ensure media is loaded
             const mediaEl = page.querySelector('img, video');
-            let pageWidth = 260, pageHeight = 260; // fallback sizes
+            let pageWidth = 260, pageHeight = 260;
             if (mediaEl) {
                 pageWidth = mediaEl.naturalWidth || mediaEl.videoWidth || 260;
                 pageHeight = mediaEl.naturalHeight || mediaEl.videoHeight || 260;
             }
 
-            // Scale down if too big
             pageWidth = Math.min(pageWidth, 260);
             pageHeight = Math.min(pageHeight, 260);
 
@@ -179,8 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         album.style.height = (y + rowHeight + padding) + 'px';
     }
 
-
-    // Filter functionality
+    // filter
     mediaFilter.addEventListener('change', () => {
         const selected = mediaFilter.value;
         pages.forEach(page => {
@@ -191,6 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 page.style.display = 'none';
             }
         });
-        layoutGrid(); // re-layout visible media
+        layoutGrid();
     });
 });

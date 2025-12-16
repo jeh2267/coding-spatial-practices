@@ -15,7 +15,6 @@ body {
     padding: 3rem;
 }
 
-/* Header buttons */
 header {
     display: flex;
     justify-content: space-between;
@@ -47,7 +46,6 @@ button.active {
     transform: scale(1.05);
 }
 
-/* Album container */
 #album {
     max-width: 90vh;
     height: 70vh;
@@ -58,7 +56,6 @@ button.active {
     border: 20px groove var(--brown);
 }
 
-/* Grid view */
 #album.grid-view {
     position: relative;
     width: 100%;
@@ -72,7 +69,6 @@ button.active {
     box-sizing: border-box;
 }
 
-/* Pages in album view */
 .page {
     background: var(--cream);
     width: 100%;
@@ -93,7 +89,6 @@ button.active {
     z-index: 1000;
 }
 
-/* Pages in grid view */
 #album.grid-view .page {
     position: absolute;
     display: flex;
@@ -113,7 +108,6 @@ button.active {
     z-index: auto;
 }
 
-
 #album.grid-view .page img,
 #album.grid-view .page video,
 #album.grid-view .page a {
@@ -126,7 +120,6 @@ button.active {
     margin: 0;
 }
 
-/* Front page */
 #front-page {
     background-color: var(--brown);
     color: var(--cream);
@@ -136,17 +129,11 @@ button.active {
     align-items: center;
 }
 
-/* #album.grid-view #front-page {
-    display: none;
-} */
-
-/* Flipped page */
 .page.flipped {
     transform: rotateY(-180deg);
     z-index: 900;
 }
 
-/* Media inside pages */
 .page img,
 .page video {
     max-width: 100%;
@@ -158,14 +145,12 @@ button.active {
     margin: 8px 0;
 }
 
-/* Hover effect for linked media in album view */
 #album:not(.grid-view) .page a:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 12px var(--yellow);
     cursor: pointer;
 }
 
-/* Flip buttons */
 #prev, #next {
     position: absolute;
     top: 0;
@@ -183,7 +168,6 @@ button.active {
     background: rgba(0,0,0,0.05);
 }
 
-/* Filter dropdown */
 #filterContainer {
     margin-left: 1rem;
     color: var(--yellow);
@@ -204,7 +188,6 @@ button.active {
     color: var(--yellow);
 }
 
-/* Footer About button */
 footer .about {
     display: flex;
     justify-content: center;
@@ -219,7 +202,6 @@ footer .about button {
     margin-right: 0;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -261,7 +243,6 @@ footer .about button {
     color: var(--blue);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     #album {
         width: 95%;
