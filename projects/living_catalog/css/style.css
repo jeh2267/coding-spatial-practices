@@ -56,7 +56,6 @@ button.active {
     position: relative;
     overflow: hidden;
     border: 20px groove var(--brown);
-    background-color: var(--cream);
 }
 
 /* Page style */
@@ -161,17 +160,15 @@ button.active {
 }
 
 #album.grid-view .page {
-    position: static;
-    width: 100%;
-    height: auto;
-    transform: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    transition: transform 0.2s, box-shadow 0.2s;
+    width: auto;                 /* natural width of media */
+    height: auto;                /* natural height of media */
+    background: none;            /* remove cream background */
+    border: none;                /* remove album border */
+    box-shadow: none;            /* remove shadow/3D */
+    transform: none !important;  /* cancel flipping */
+    display: block;              /* normal flow */
+    position: absolute;          /* position randomized by JS */
+    padding: 0; 
 }
 
 #album.grid-view .page:hover {
@@ -220,15 +217,16 @@ footer .about button {
 
 /* Modal content box */
 .modal-content {
-    background-color: var(--brown);
+    background-color: var(--cream);
     color: var(--yellow);
     margin: 10% auto;             /* Center vertically */
     padding: 20px;
-    border: 2px solid var(--blue);
+    border: 2px solid var(--cream);
     border-radius: 8px;
     width: 80%;
-    max-width: 500px;
+    max-width: 200px;
     position: relative;
+
 }
 
 /* Close button */
