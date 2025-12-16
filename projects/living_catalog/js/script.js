@@ -3,13 +3,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const frontPage = document.getElementById('front-page');
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
+    const albumBtn = document.getElementById('albumViewBtn');
+    const gridBtn = document.getElementById('gridViewBtn');
 
     let pages = [];
-    let currentPage = 0; // 0 = front page
+    let currentPage = 0;
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
-    // Load CSV
+    // Set default active button
+    albumBtn.classList.add('active');
+
+    // Toggle active states
+    [albumBtn, gridBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+            albumBtn.classList.remove('active');
+            gridBtn.classList.remove('active');
+            btn.classList.add('active');
+        });
+    });
+
+    // Toggle views
+    albumBtn.addEventListener('click', () => {
+        album.classList.remove('grid-view');
+        // Reset flipped pages
+        pages.forEach(page => page.classList.remove('flipped'));
+        if (frontPage) frontPage.style.zIndex = 2000;
+        currentPage = 0;
+    });
+
+    gridBtn.addEventListener('click', () => {
+        album.classList.add('grid-view');
+    });
+
+    // Load CSV media
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -61,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             page.appendChild(mediaEl);
         }
 
-        // Title below media
+        // Title
         const titleEl = document.createElement('h2');
         titleEl.textContent = media.title;
         page.appendChild(titleEl);
@@ -71,10 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
         pages.push(page);
     }
 
-
-    // Click handlers for edge buttons
+    // Flip buttons
     nextBtn.addEventListener('click', e => {
-        e.stopPropagation(); // prevent any other click
+        e.stopPropagation();
         if (currentPage < pages.length) {
             const pageToFlip = currentPage === 0 ? frontPage : pages[currentPage - 1];
             if (pageToFlip) pageToFlip.classList.add('flipped');
@@ -91,4 +117,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-

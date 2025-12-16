@@ -10,16 +10,13 @@
 <body>
 
     <header>
-        <div class="views">
-            <button id="albumViewBtn">Album</button>
-        </div>
-        <div class="views">
-            <button id="gridViewBtn">Grid</button>
-        </div>
+        <button id="albumViewBtn">Album</button>
+        <button id="gridViewBtn">Grid</button>
     </header>
 
-    <div id="album">
-        <div class="page" id="front-page">
+    <div id="mediaContainer">
+        <div id="album">
+            <div class="page" id="front-page">
                 <h1>Memories</h1>
                 <p>Click to Open</p>
             </div>
@@ -27,18 +24,14 @@
 
         <div id="prev"></div>
         <div id="next"></div>
-
     </div>
 
-    <script src="js/script.js"></script>
-    
     <footer>
         <div class="about">
-            <h2>About</h2>
+            <button>About</button>
         </div>
     </footer>
+
+    <script src="js/script.js"></script>
 </body>
-
-
-
 </html>

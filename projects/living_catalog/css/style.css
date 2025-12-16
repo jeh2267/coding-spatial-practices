@@ -1,29 +1,62 @@
 :root {
-    --font: Oswald, sans-serif;      /* Define main font for site */
-    --blue: #2FB7B0;                 /* Example color variable */
-    --yellow: #F2B705;               /* Example color variable */
-    --green: #7E8F5B;                /* Example background color */
-    --brown: #4B3A2F;                /* Example text/border color */
-    --cream: #F7F3E8;                /* Example page background color */
-}   
+    --font: Oswald, sans-serif;
+    --blue: #2FB7B0;
+    --yellow: #F2B705;
+    --green: #7E8F5B;
+    --brown: #4B3A2F;
+    --cream: #F7F3E8;
+}
 
+/* Body */
 body {
-    font-family: var(--font);        /* Use font from root variable */
-    color: var(--brown);             /* Default text color */
-    background-color: var(--green);  /* Page background color */
-    padding: 3rem;                   /* Space around entire body content */
+    font-family: var(--font);
+    color: var(--brown);
+    background-color: var(--green);
+    padding: 3rem;
+}
+
+/* Header buttons */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+}
+
+button {
+    font-family: var(--font);
+    background-color: var(--cream);
+    color: var(--blue);
+    border: 2px solid var(--brown);
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: var(--brown);
+    color: var(--cream);
+    transform: scale(1.05);
+}
+
+button.active {
+    background-color: var(--brown);
+    color: var(--cream);
+    transform: scale(1.05);
 }
 
 /* Album container */
 #album {
-    max-width: 90vh;                 /* Limit width relative to viewport height */
-    height: 70vh;                    /* Set fixed height for album */
-    perspective: 2000px;             /* Enables 3D effect for page flipping */
-    margin: auto;                     /* Center album horizontally */
-    position: relative;               /* Required for absolute positioning of pages inside */
-    overflow: hidden;                 /* Hide content that spills outside album container */
-    border: 20px groove var(--brown); /* Give album a thick decorative border */
-    background-color: var(--cream);   /* Album background color */
+    max-width: 90vh;
+    height: 70vh;
+    perspective: 2000px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+    border: 20px groove var(--brown);
+    background-color: var(--cream);
 }
 
 /* Page style */
@@ -35,39 +68,38 @@ body {
     top: 0;
     left: 0;
     display: flex;
-    flex-direction: column;           /* stack media then title */
-    justify-content: flex-start;     /* keep media at top so title always has room */
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     transform-origin: left;
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: transform 0.8s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
-    overflow: hidden;                 /* keep pages contained */
-    padding: 12px;                    /* increase padding to give title space */
-    z-index: 1000;                    /* Stack pages on top of each other */
+    overflow: hidden;
+    padding: 12px;
+    z-index: 1000;
 }
 
 /* Flipped page */
 .page.flipped {
-    transform: rotateY(-180deg);      /* Rotate page around Y-axis to simulate flip */
-    z-index: 900;                     /* Place flipped pages behind the next page */
+    transform: rotateY(-180deg);
+    z-index: 900;
 }
 
 /* Media inside pages */
 .page img,
 .page video {
-    max-width: 94%;                   /* fit horizontally inside page */
-    /* leave vertical space for title (adjust 72px if your titles are taller) */
+    max-width: 94%;
     max-height: calc(100% - 72px);
-    width: auto;                      /* Maintain natural aspect ratio */
-    height: auto;                     /* Maintain natural aspect ratio */
-    object-fit: contain;              /* scale without cropping */
+    width: auto;
+    height: auto;
+    object-fit: contain;
     display: block;
-    margin: 8px 0;                    /* space around media */
+    margin: 8px 0;
 }
 
-/* Title below media */
+/* Page title */
 .page h2 {
     margin: 8px 0 4px 0;
     text-align: center;
@@ -77,65 +109,100 @@ body {
     white-space: normal;
     word-break: break-word;
     overflow-wrap: anywhere;
-    line-height: 1.2;                 /* Adjust line spacing for readability */
+    line-height: 1.2;
 }
 
 /* Flip buttons */
 #prev, #next {
-    position: absolute;               /* Position on edges of album */
-    top: 0;                           /* Align to top */
-    width: 10%;                       /* Take 10% of album width for clickable edge */
-    height: 100%;                     /* Full album height */
-    z-index: 3000;                    /* On top of everything else */
-    cursor: pointer;                  /* Show pointer cursor on hover */
-    transition: background 0.2s;      /* Smooth background color change on hover */
+    position: absolute;
+    top: 0;
+    width: 10%;
+    height: 100%;
+    z-index: 3000;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-#prev { left: 0; }                    /* Left edge for previous page */
-#next { right: 0; }                   /* Right edge for next page */
+#prev { left: 0; }
+#next { right: 0; }
 
-/* Hover effect */
 #prev:hover, #next:hover {
-    background: rgba(0,0,0,0.05);     /* Light grey overlay when hovered to indicate clickable area */
+    background: rgba(0,0,0,0.05);
+}
+
+/* Grid view */
+#album.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 16px;
+    max-width: 95%;
+    height: auto;
+    overflow-y: auto;
+    perspective: none;
+    border: none;
+    padding: 16px;
+    background-color: var(--cream);
+}
+
+#album.grid-view .page {
+    position: static;
+    width: 100%;
+    height: auto;
+    transform: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#album.grid-view .page:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+#album.grid-view .page img,
+#album.grid-view .page video {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+#album.grid-view + #prev,
+#album.grid-view + #next,
+#prev, #next {
+    display: none;
+}
+
+/* Footer About button */
+footer .about {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--cream);
+    padding: 16px;
+    border-radius: 4px 4px 0 0;
+    font-size: 1.1rem;
+}
+
+footer .about button {
+    margin-right: 0;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #album {
-        width: 95%;                    /* Wider album on smaller screens */
-        height: 60vh;                  /* Reduce height for mobile screens */
+        width: 95%;
+        height: 60vh;
     }
 
     .page h2 {
-        font-size: 1em;                /* Slightly smaller titles on mobile */
+        font-size: 1em;
     }
 
     #prev, #next {
-        width: 15%;                     /* Make flip buttons larger on mobile for easier tapping */
+        width: 15%;
     }
 }
-
-
-/* .content-wrapper {
-    /* display: contain; */
-    /* flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%; */
-    /* display: block; */
-
-/* .views, .about {
-    display: flex;
-    gap: 0.5rem;
-}
-
-button, .about {
-  background: var(--bg);
-  border: 1px solid var(--text);
-  border-radius: 6px;
-  color: var(--text);
-  cursor: pointer;
-  padding: 0.4rem 0.8rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-} */
