@@ -28,6 +28,7 @@ body {
 
 /* Page style */
 .page {
+    background: var(--cream);
     width: 100%;                      /* Fill full album width */
     height: 100%;                     /* Fill full album height */
     position: absolute;               /* Stack all pages on top of each other */
