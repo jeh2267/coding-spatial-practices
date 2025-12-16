@@ -121,101 +121,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         page.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg)`;
     });
-}
-
-function restoreAlbumLayout() {
-    pages.forEach((page, index) => {
-        page.onpointerdown = null;
-        page.onpointermove = null;
-        page.onpointerup = null;
-
-        page.classList.remove('dragging');
-        page.style.position = 'absolute';
-        page.style.top = '0';
-        page.style.left = '0';
-        page.style.transform = '';
-        page.style.zIndex = 1000 - index;
-        page.classList.remove('flipped');
-    });
-
-    if (frontPage) frontPage.classList.remove('flipped');
-    currentPage = 0;
-}
-
-
-    function getClosestPage(x, y, draggingEl) {
-    let closest = null;
-    let closestDistance = Infinity;
-
-    pages.forEach(page => {
-        if (page === draggingEl) return;
-
-        const rect = page.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-
-        const dist = Math.hypot(cx - x, cy - y);
-        if (dist < closestDistance) {
-            closestDistance = dist;
-            closest = page;
-        }
-    });
-
-    return closest;
     }
 
-    function enableGridDragging() {
-    pages.forEach(page => {
-        let offsetX = 0;
-        let offsetY = 0;
+    function restoreAlbumLayout() {
+        pages.forEach((page, index) => {
+            page.style.transform = '';
+            page.style.position = 'absolute';
+            page.style.top = '0';
+            page.style.left = '0';
+            page.style.width = '100%';
+            page.style.height = '100%';
+            page.style.zIndex = 1000 - index;
+            page.classList.remove('flipped');
+        });
 
-        page.onpointerdown = e => {
-            if (!album.classList.contains('grid-view')) return;
-
-            page.classList.add('dragging');
-
-            const rect = page.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-
-            page.style.left = `${rect.left}px`;
-            page.style.top = `${rect.top}px`;
-
-            page.setPointerCapture(e.pointerId);
-        };
-
-        page.onpointermove = e => {
-            if (!page.classList.contains('dragging')) return;
-
-            page.style.left = `${e.clientX - offsetX}px`;
-            page.style.top = `${e.clientY - offsetY}px`;
-        };
-
-        page.onpointerup = e => {
-            if (!page.classList.contains('dragging')) return;
-
-            page.releasePointerCapture(e.pointerId);
-            page.classList.remove('dragging');
-
-            const closest = getClosestPage(e.clientX, e.clientY, page);
-
-            // Reset fixed positioning
-            page.style.left = '';
-            page.style.top = '';
-            page.style.position = '';
-            page.style.zIndex = '';
-
-            if (closest) {
-                album.insertBefore(page, closest);
-            }
-
-            // Refresh pages array order
-            pages = Array.from(document.querySelectorAll('.page'));
-        };
-    });
+        if (frontPage) frontPage.classList.remove('flipped');
+        currentPage = 0;
     }
-
-
 
     /* -------------------------------
        Next / Prev Flip Buttons
@@ -248,7 +170,6 @@ function restoreAlbumLayout() {
 
         setGridPositions();
         applyGridScatter();
-        enableGridDragging();
     });
 
     albumViewBtn.addEventListener('click', () => {

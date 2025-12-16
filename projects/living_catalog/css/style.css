@@ -109,9 +109,6 @@ button.active {
     padding: 0;
 
     transform: none !important;
-
-    cursor: grab;
-    touch-action: none;
 }
 
 #front-page {
@@ -280,12 +277,4 @@ footer .about button {
 #album.grid-view .page:hover {
     transform: translateY(-6px) scale(1.03);
     z-index: 5;
-}
-
-#album.grid-view .page.dragging {
-    cursor: grabbing;
-    opacity: 0.8;
-    z-index: 100;
-    position: fixed;
-    pointer-events: none;
 }
