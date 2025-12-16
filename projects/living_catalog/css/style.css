@@ -7,7 +7,6 @@
     --cream: #efe9d8;
 }
 
-/* Body */
 body {
     font-family: var(--font);
     color: var(--brown);
@@ -15,7 +14,6 @@ body {
     padding: 3rem;
 }
 
-/* Header buttons */
 header {
     display: flex;
     justify-content: space-between;
@@ -47,7 +45,6 @@ button.active {
     transform: scale(1.05);
 }
 
-/* Album container */
 #album {
     max-width: 90vh;
     height: 70vh;
@@ -58,7 +55,6 @@ button.active {
     border: 20px groove var(--brown);
 }
 
-/* Grid view: album becomes a full-page canvas */
 #album.grid-view {
     position: relative;
     width: 100%;
@@ -67,7 +63,7 @@ button.active {
     max-height: none;
     min-height: 100vh;
 
-    display: flex;
+    display: block;
     flex-wrap: wrap;
     align-content: flex-start;
     gap: 30px;
@@ -80,10 +76,9 @@ button.active {
     border: none;
     background: none;
     perspective: none;
+    padding-bottom: 100px;
 }
 
-
-/* Page style */
 .page {
     background: var(--cream);
     width: 100%;
@@ -105,7 +100,7 @@ button.active {
 }
 
 #album.grid-view .page {
-    position: relative;
+    position: aboslute;
     width: auto;
     height: auto;
     max-width: calc(100vw - 120px);
@@ -132,13 +127,11 @@ button.active {
     display: none;
 }
 
-/* Flipped page */
 .page.flipped {
     transform: rotateY(-180deg);
     z-index: 900;
 }
 
-/* Media inside pages */
 .page img,
 .page video {
     max-width: 100%;
@@ -150,27 +143,12 @@ button.active {
     margin: 8px 0;
 }
 
-/* Hover effect for linked media in album view */
 #album:not(.grid-view) .page a:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 12px var(--yellow);
     cursor: pointer;
 }
 
-/* Page title */
-/* .page h2 {
-    margin: 8px 0 4px 0;
-    text-align: center;
-    font-size: 1.1em;
-    width: 100%;
-    flex-shrink: 0;
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    line-height: 1.2;
-} */
-
-/* Flip buttons */
 #prev, #next {
     position: absolute;
     top: 0;
@@ -197,7 +175,6 @@ button.active {
     object-fit: contain;
 }
 
-/* Footer About button */
 footer .about {
     display: flex;
     justify-content: flex-start;
@@ -213,24 +190,23 @@ footer .about button {
 }
 
 .modal {
-    display: none;                /* Hidden by default */
+    display: none;
     position: fixed;
-    z-index: 5000;                /* On top of everything */
+    z-index: 5000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     justify-content: center;
     align-items: center;
-    overflow: auto;               /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.5); /* Semi-transparent background */
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
 }
 
-/* Modal content box */
 .modal-content {
     background-color: var(--cream);
     color: var(--yellow);
-    margin: 10% auto;             /* Center vertically */
+    margin: 10% auto;
     padding: 20px;
     border: 2px solid var(--cream);
     border-radius: 8px;
@@ -240,7 +216,6 @@ footer .about button {
 
 }
 
-/* Close button */
 .close {
     position: absolute;
     top: 10px;
@@ -256,7 +231,6 @@ footer .about button {
     color: var(--blue);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     #album {
         width: 95%;

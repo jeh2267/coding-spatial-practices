@@ -10,13 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.querySelector('.modal .close');
 
     let pages = [];
-    let currentPage = 0; // 0 = front page
+    let currentPage = 0;
 
     if (frontPage) frontPage.style.zIndex = 2000;
 
-    /* -------------------------------
-       Helper: Shuffle Array
-    -------------------------------- */
+    /* shuffle media */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -25,9 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    /* -------------------------------
-       Load CSV and create pages
-    -------------------------------- */
+    /* load data and make pages */
     fetch('media.csv')
         .then(res => res.text())
         .then(data => {
@@ -46,22 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             });
 
-            // Shuffle media
             shuffleArray(mediaArray);
 
-            // Create pages
             mediaArray.forEach(media => createPage(media));
         })
         .catch(err => console.error('Failed to fetch CSV:', err));
 
-    /* -------------------------------
-       Create individual page
-    -------------------------------- */
+    /* create individual media pages */
     function createPage(media) {
         const page = document.createElement('div');
         page.classList.add('page');
 
-        // Media element
         let mediaEl;
         if (media.type === 'link') {
             const a = document.createElement('a');
@@ -83,16 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
             page.appendChild(mediaEl);
         }
 
-        // Note: Titles are intentionally not rendered
-
         page.style.zIndex = 1000 - pages.length;
         album.appendChild(page);
         pages.push(page);
     }
 
-    /* -------------------------------
-       Next / Prev Flip Buttons
-    -------------------------------- */
+    /* next/prev buttons */
     nextBtn.addEventListener('click', e => {
         e.stopPropagation();
         if (currentPage < pages.length) {
@@ -111,9 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* -------------------------------
-       Album / Grid Toggle
-    -------------------------------- */
+    /* album/grid toggle */
     gridViewBtn.addEventListener('click', () => {
         album.classList.add('grid-view');
         gridViewBtn.classList.add('active');
@@ -121,11 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (frontPage) frontPage.style.display = 'none';
 
-        // Hide flip buttons in grid view
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
 
-        layoutGrid(); // Your function to layout media in grid
+        layoutGrid();
     });
 
     albumViewBtn.addEventListener('click', () => {
@@ -135,11 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (frontPage) frontPage.style.display = 'flex';
 
-        // Show flip buttons in album view
         prevBtn.style.display = 'block';
         nextBtn.style.display = 'block';
 
-        // Reset pages for album view
         pages.forEach((page, i) => {
             page.style.position = 'absolute';
             page.style.top = '0';
@@ -150,12 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage = 0;
     });
 
-    // Default active button
     albumViewBtn.classList.add('active');
 
-    /* -------------------------------
-       About Modal
-    -------------------------------- */
+    /* about popup */
     aboutBtn.addEventListener('click', () => {
         aboutModal.style.display = 'flex';
     });
@@ -170,27 +149,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /* -------------------------------
-       Grid Layout Helper
-       Example: Random positions without overlap
-    -------------------------------- */
+    /* grid */
     function layoutGrid() {
         const padding = 20;
-        let x = padding;
-        let y = padding;
-        const rowHeight = 280;
+        const placed = [];
+        const containerWidth = album.clientWidth;
 
         pages.forEach(page => {
-            page.style.position = 'absolute';
-            page.style.transform = '';
-            page.style.top = y + 'px';
-            page.style.left = x + 'px';
+            const pageWidth = page.offsetWidth;
+            const pageHeight = page.offsetHeight;
+            let x, y, tries = 0, overlap;
 
-            x += page.offsetWidth + padding;
-            if (x + page.offsetWidth > window.innerWidth) {
-                x = padding;
-                y += rowHeight + padding;
-            }
+            do {
+                x = Math.random() * (containerWidth - pageWidth - padding);
+                y = Math.random() * (window.innerHeight + pages.length * 300); 
+                overlap = placed.some(rect => !(x + pageWidth < rect.x || x > rect.x + rect.width || y + pageHeight < rect.y || y > rect.y + rect.height));
+                tries++;
+                if (tries > 100) break;
+            } while (overlap);
+
+            page.style.left = x + 'px';
+            page.style.top = y + 'px';
+
+            placed.push({x, y, width: pageWidth + padding, height: pageHeight + padding});
         });
+
+        const maxY = placed.reduce((max, rect) => Math.max(max, rect.y + rect.height), 0);
+        album.style.height = (maxY + padding) + 'px';
     }
+
 });
