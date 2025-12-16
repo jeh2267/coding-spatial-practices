@@ -102,7 +102,7 @@ button.active {
     z-index: 1000;
 }
 
-#front-page {
+#album.album-view #front-page {
     background-color: var(--brown);
     color: var(--cream);
     display: flex;
@@ -111,6 +111,9 @@ button.active {
     align-items: center;
 }
 
+#album.grid-view #front-page {
+    display: none;
+}
 
 /* Flipped page */
 .page.flipped {
@@ -201,9 +204,11 @@ button.active {
 
 #album.grid-view .page img,
 #album.grid-view .page video {
-    max-width: 100%;
-    max-height: 200px;
-    object-fit: cover;
+    max-width: 260px;
+    max-height: 260px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 #album.grid-view + #prev,
@@ -234,6 +239,8 @@ footer .about button {
     top: 0;
     width: 100%;
     height: 100%;
+    justify-content: center;
+    align-items: center;
     overflow: auto;               /* Enable scroll if needed */
     background-color: rgba(0,0,0,0.5); /* Semi-transparent background */
 }

@@ -96,22 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setGridPositions() {
-    pages.forEach(page => {
-        const albumWidth = album.clientWidth;
-        const albumHeight = album.clientHeight;
+        const padding = 40;
 
-        const maxX = albumWidth - page.offsetWidth;
-        const maxY = albumHeight - page.offsetHeight;
+        const containerWidth = window.innerWidth;
+        const containerHeight = window.innerHeight;
 
-        const randX = Math.random() * maxX;
-        const randY = Math.random() * maxY;
+        pages.forEach(page => {
+            const pageRect = page.getBoundingClientRect();
 
-        page.style.position = 'absolute';
-        page.style.left = `${randX}px`;
-        page.style.top = `${randY}px`;
-        page.style.transform = 'none';       // remove flip rotation
-        page.style.zIndex = 1;               // flatten layers
-    });
+            const maxX = containerWidth - pageRect.width - padding;
+            const maxY = containerHeight - pageRect.height - padding;
+
+            const randX = Math.random() * Math.max(maxX, 0);
+            const randY = Math.random() * Math.max(maxY, 0);
+
+            page.style.left = `${randX}px`;
+            page.style.top = `${randY}px`;
+            page.style.zIndex = Math.floor(Math.random() * 10) + 1;
+        });
     }
 
     /* -------------------------------
@@ -143,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gridViewBtn.classList.add('active');
         albumViewBtn.classList.remove('active');
         
-        if (frontPage) frontPage.style.display = 'none';
         setGridPositions
     });
 
